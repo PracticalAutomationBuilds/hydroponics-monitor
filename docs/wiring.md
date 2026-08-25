@@ -150,18 +150,20 @@ Because the SEN0368 adaptor operates at 5 V, its IO2 signal must not be connecte
 
 A BC337 NPN transistor provides the interface:
 
+```text
 SEN0368 IO2 ---- 10 kΩ ---- Q1 base
 Q1 base -------- 100 kΩ --- GND
 Q1 emitter ---------------- GND
 Q1 collector -------------- GPIO24
 GPIO24 --------- 10 kΩ ---- 3.3 V
+```
 
 The resulting Raspberry Pi logic is:
 
-water present: SEN0368 IO2 HIGH → Q1 ON → GPIO24 LOW
-no water: SEN0368 IO2 LOW → Q1 OFF → GPIO24 HIGH
+- water present: SEN0368 IO2 HIGH → Q1 ON → GPIO24 LOW
+- no water: SEN0368 IO2 LOW → Q1 OFF → GPIO24 HIGH
 
-The software therefore treats the return-water input as active-low, with wet_level: 0.
+The software therefore treats the return-water input as active-low, with `wet_level: 0`.
 
 The 100 kΩ base pull-down and 10 kΩ GPIO24 pull-up perform separate functions and both are required.
 
