@@ -26,8 +26,12 @@ This bill of materials reflects the current prototype build and may change befor
 ## Indicators and Alarms
 
 | Qty | Component | Part / Model | Supplier | Notes |
-| --: | --------- | ------------ | -------- | ----- |
-|     |           |              |          |       |
+|---:|---|---|---|---|
+| 1 | Red 10 mm diffused LED | SparkFun COM-10632 | Core Electronics | Alarm indicator; GPIO26; requires external 330 Ω series resistor |
+| 1 | Yellow 10 mm diffused LED | SparkFun COM-10634 | Core Electronics | Used as amber alarm-inhibit indicator; GPIO20; requires external 330 Ω series resistor |
+| 1 | Green 10 mm diffused LED | SparkFun COM-10633 | Core Electronics | Healthy/startup status indicator; GPIO21; requires external 330 Ω series resistor |
+| 1 | 5 V active buzzer | CE09882 | Core Electronics | PCB-mounted audible alarm; driven from GPIO12 through Q2 |
+| 1 | Maintained SPST rocker switch | Rocker Switch - SPST (round) | Core Electronics | Panel-mounted alarm-inhibit switch; connects GPIO18 to GND when active |
 
 ## Interface and Protection Components
 
