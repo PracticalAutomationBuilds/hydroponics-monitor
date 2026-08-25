@@ -85,9 +85,11 @@ Internet access is required only if optional Pushover notifications are enabled.
 
 Download the **latest Hydroponics Monitor release** and have the complete release ZIP available on the computer from which the installation will be performed.
 
-For example, the current release at the time this documentation was prepared is:
+Release ZIP filenames follow this pattern. For example:
 
 `Hydro_Monitor_v9_1_2.zip`
+
+Use the filename of the latest release when following the commands below.
 
 Do not copy individual files from the release package or omit supporting files. The supplied installer expects the complete extracted release structure.
 
