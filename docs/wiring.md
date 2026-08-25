@@ -73,7 +73,38 @@ The SEN0368 adaptor operates from 5 V, so its IO2 signal is interfaced to GPIO24
 
 ### DS18B20 Temperature Sensors
 
-Connection details for the shared 1-Wire temperature-sensor bus will be documented here.
+Two waterproof DS18B20 temperature probes share a single Raspberry Pi 1-Wire bus on GPIO4.
+
+Each probe has its own 3-way terminal block so that either sensor can be disconnected or replaced independently.
+
+#### Reservoir DS18B20 — TB4
+
+| Terminal | Connection | Probe Wire |
+|---:|---|---|
+| 1 | 3.3 V | Red |
+| 2 | DATA / GPIO4 shared bus | White |
+| 3 | GND | Black |
+
+#### Grow-Pipe DS18B20 — TB5
+
+| Terminal | Connection | Probe Wire |
+|---:|---|---|
+| 1 | 3.3 V | Red |
+| 2 | DATA / GPIO4 shared bus | White |
+| 3 | GND | Black |
+
+#### Shared 1-Wire Bus
+
+The two probes are connected in parallel:
+
+- both red wires connect to 3.3 V
+- both white DATA wires connect to the common GPIO4 bus
+- both black wires connect to GND
+- one shared 4.7 kΩ pull-up resistor connects the DATA/GPIO4 bus to 3.3 V
+
+Only **one 4.7 kΩ pull-up resistor** is used for the complete 1-Wire bus.
+
+The two sensors are distinguished in software by their unique DS18B20 hardware IDs, which are assigned permanently as the reservoir and grow-pipe probes during commissioning.
 
 ### Ambient Temperature and Humidity Sensor
 
