@@ -186,39 +186,109 @@ A successful automated result does **not** by itself prove that every sensor, sw
 
 Do not enable the Hydroponics Monitor services yet.
 
-## Sensor Tests
+## Sensor and Input Tests
 
-### Nutrient-Solution Temperature Sensor
+The hardware self-test can be repeated as necessary while checking the individual sensors and inputs:
 
-Verify that the sensor:
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
 
-* is detected
-* reports a plausible temperature
-* responds appropriately to a controlled temperature change
+The monitor and dashboard services should remain disabled during these checks.
 
-### Grow-Pipe Temperature Sensor
+### Reservoir Temperature Probe
 
-Verify that the sensor:
+Confirm that:
 
-* is detected
-* reports a plausible temperature
-* can be distinguished from the nutrient-solution sensor
+- a valid reservoir temperature is reported
+- the temperature is plausible for the probe's surroundings
+- the reading belongs to the probe previously assigned as the reservoir sensor
+
+If necessary, gently warm the probe by hand and repeat the self-test to confirm its identity.
+
+### Grow-Pipe Temperature Probe
+
+Confirm that:
+
+- a separate valid grow-pipe temperature is reported
+- the temperature is plausible for the probe's surroundings
+- the reading belongs to the probe previously assigned as the grow-pipe sensor
+
+The two DS18B20 probes must remain distinguishable by their unique hardware IDs even though they share the same GPIO4 1-Wire bus.
 
 ### Ambient Temperature and Humidity Sensor
 
-Verify that:
+Confirm that the DHT22 reports:
 
-* temperature readings are plausible
-* relative-humidity readings are plausible
-* loss of sensor communication is detected correctly
+- a plausible ambient temperature
+- a plausible relative-humidity reading
 
-### Return Water-Level Sensor
+A failed DHT22 reading does not cause the DS18B20 hardware self-test itself to fail, so its output must be checked manually.
 
-Verify normal operation across the expected water-level range.
+### Return-Water Sensor
 
-### Low Reservoir Float Switch
+Test the SEN0368 in both water-present and water-absent conditions.
 
-Manually operate the float switch and confirm that both normal and low-water states are detected correctly.
+With water detected, the self-test should report:
+
+```text
+Return sensor raw value: 0
+Return interpreted as wet: True
+```
+
+With no water detected, it should report:
+
+```text
+Return sensor raw value: 1
+Return interpreted as wet: False
+```
+
+The inverted GPIO logic is intentional because the SEN0368 signal passes through Q1 before reaching GPIO24.
+
+If the interpretation is reversed, check the SEN0368 adaptor settings and Q1 wiring rather than changing the software configuration to compensate for a wiring fault.
+
+### Reservoir Float Switch
+
+Manually operate the float through both positions.
+
+In the intended normal-water position, the self-test should report:
+
+```text
+Low-level input electrical value: 0
+Reservoir level interpreted as acceptable: True
+```
+
+In the low-water position, it should report:
+
+```text
+Low-level input electrical value: 1
+Reservoir level interpreted as acceptable: False
+```
+
+The float must be oriented so that the contact is **closed to ground at an acceptable water level** and open at low water.
+
+This arrangement is deliberately fail-safe: an open circuit caused by a disconnected or broken float-switch cable is interpreted in the same way as low water.
+
+### Alarm-Inhibit Switch
+
+Test the maintained alarm-inhibit switch in both positions.
+
+With alarms operating normally, the self-test should report:
+
+```text
+Override switch active: False
+```
+
+With the switch set to inhibit alarms:
+
+```text
+Override switch active: True
+```
+
+Return the switch to its normal **alarms enabled** position before continuing commissioning.
 
 ## Indicator Tests
 
