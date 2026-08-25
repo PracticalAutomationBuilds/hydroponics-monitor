@@ -425,11 +425,102 @@ Any future wiring diagram added to the repository must be checked against the ve
 
 ## Safety and Construction Notes
 
-Final construction notes will include:
+Before applying power to the completed controller, inspect and test the permanent wiring carefully.
 
-* polarity checks
-* voltage-level considerations
-* sensor lead identification
-* soldering and insulation requirements
-* strain relief
-* enclosure considerations
+### Power-Off Work
+
+Disconnect power from the Raspberry Pi before:
+
+- fitting or removing the Makerverse Protoboard
+- fitting or removing the RTC module
+- soldering or modifying the permanent board
+- connecting or disconnecting internal wiring
+
+Do not solder with the Raspberry Pi powered.
+
+### Voltage Levels
+
+Raspberry Pi GPIO inputs are **3.3 V logic only**.
+
+Never connect a 5 V signal directly to a Raspberry Pi GPIO.
+
+The SEN0368 adaptor operates from 5 V, so its IO2 output is connected to GPIO24 through the Q1 BC337 interface circuit.
+
+### Polarity
+
+Check polarity before connecting:
+
+- DS18B20 probes
+- DHT22 module
+- SEN0368 adaptor
+- LEDs
+- buzzer
+- power and ground wiring
+
+For the panel LEDs:
+
+```text
+GPIO ---- 330 Ω ---- LED anode (+)
+LED cathode (-) ---- GND
+```
+
+The longer LED lead is normally the anode and the shorter lead the cathode. The flat edge of a conventional through-hole LED body normally identifies the cathode, but confirm the actual component before soldering.
+
+### Transistor Orientation
+
+Do not assume the collector, base and emitter order of a BC337 from a generic drawing.
+
+Confirm the lead arrangement for the actual transistors being used before soldering Q1 or Q2.
+
+After installation, verify continuity between each transistor lead and its intended circuit connection.
+
+### Pull-Up and Pull-Down Resistors
+
+The following resistors perform specific circuit functions and should not be omitted:
+
+- one 4.7 kΩ pull-up for the shared DS18B20 1-Wire bus
+- one 10 kΩ pull-up for the reservoir float input
+- one 10 kΩ pull-up on the Q1 collector / GPIO24 input
+- one 100 kΩ Q1 base pull-down
+- one 10 kΩ Q2 base pull-down
+
+Each enclosure LED also requires its own 330 Ω series resistor.
+
+### Insulation and Clearances
+
+Inspect the underside of the Makerverse Protoboard for:
+
+- solder bridges
+- clipped component leads touching adjacent pads
+- underside links contacting neighbouring connections
+- exposed conductors that could contact the Raspberry Pi or heatsink
+- insufficient clearance around the RTC module
+
+Where an aftermarket Raspberry Pi heatsink occupies space beneath the protoboard, verify that no solder joint, component lead or underside link can contact it.
+
+### Wiring and Strain Relief
+
+Sensor and switch wiring should be mechanically supported so that movement of the external cable does not place stress directly on solder joints or terminal blocks.
+
+When the final enclosure is selected, suitable cable glands or equivalent strain-relief fittings should be used for cables entering the enclosure.
+
+Unused conductors, including the unused SEN0368 IO1 lead, should be insulated and secured so they cannot contact other circuitry.
+
+### Pre-Power Checks
+
+Before first power-up:
+
+1. Confirm there is no short circuit between 5 V and 3.3 V.
+2. Confirm there is no short circuit between either supply rail and GND.
+3. Verify both DS18B20 DATA terminals connect to GPIO4.
+4. Verify the shared 4.7 kΩ resistor connects GPIO4 to 3.3 V.
+5. Verify the reservoir float circuit connects GPIO17 to 3.3 V through 10 kΩ.
+6. Verify Q1 wiring and the GPIO24 10 kΩ pull-up.
+7. Verify Q2 wiring and its 10 kΩ base pull-down.
+8. Verify each LED has its own 330 Ω series resistor.
+9. Verify LED polarity.
+10. Verify transistor lead orientation.
+11. Confirm all terminal-block connections match the documented TB1–TB6 allocation.
+12. Check for solder bridges and unintended continuity between adjacent pads.
+
+A successful software test does not prove that the physical wiring is correct. Electrical continuity and polarity checks should be completed before the controller is placed into service.
