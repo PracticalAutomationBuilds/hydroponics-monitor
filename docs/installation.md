@@ -32,8 +32,6 @@ Hardware assembly and electrical connections are documented separately in [Wirin
 
 The examples in this guide assume that the Raspberry Pi is being prepared and administered from a **Windows computer using PowerShell**.
 
-Commands shown as `powershell` are run on the Windows computer. Commands shown as `bash` are run on the Raspberry Pi after connecting by SSH.
-
 Linux and macOS users can follow the same general procedure using their system terminal, although local file paths and some command syntax may differ.
 
 ## Requirements
