@@ -295,49 +295,80 @@ sudo /opt/hydro-monitor/verify_rtc.sh --sync-from-system
 ```
 
 The verification utility will not overwrite the RTC unless network time synchronisation has been confirmed.
-## Configure Sensors
 
-This section will document:
+## Assign the DS18B20 Temperature Probes
 
-* DS18B20 sensor identification
-* sensor ID assignment
-* ambient sensor configuration
-* water-level sensor configuration
-* low-level float-switch configuration
+The two DS18B20 probes share the same GPIO4 1-Wire bus. Each probe has a unique hardware ID, and the Hydroponics Monitor uses those IDs to distinguish the reservoir probe from the grow-pipe probe.
 
-## Configure Notifications
+Do not rely on the order in which Linux discovers the sensors. That order may change after a reboot.
 
-This section will document any required remote-notification settings and credentials.
+### List the Connected Probes
 
-Sensitive credentials must not be committed to the public repository.
+After 1-Wire has been enabled and the Raspberry Pi has rebooted, list the detected probes:
 
-Example configuration files will be provided where appropriate.
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py --list
+```
 
-## Configure the Dashboard
+Two IDs beginning with `28-` should be displayed, together with their current temperature readings.
 
-This section will document:
+### Identify Each Probe
 
-* dashboard settings
-* network access
-* port configuration
-* startup behaviour
-* accessing the dashboard from another device
+Gently hold one of the metal probes in your hand and watch the readings:
 
-## Automatic Startup
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py --watch 30
+```
 
-This section will document how to configure the Hydroponics Monitor to start automatically when the Raspberry Pi boots.
+The temperature of the probe being held should rise relative to the other probe.
 
-## First Startup
+Record which `28-...` ID belongs to:
 
-Before commissioning, confirm that:
+- the reservoir probe
+- the grow-pipe probe
 
-* all hardware connections have been checked
-* sensor polarity is correct
-* no exposed conductors can short against adjacent terminals
-* the Raspberry Pi power supply is suitable
-* all required configuration values have been entered
+Hand warmth is sufficient. Do not use hot water, a heat gun or another high-temperature source to identify the probes.
 
-The first startup and functional testing procedure will be documented in the commissioning guide.
+### Assign the Probe Roles
+
+Run the interactive configuration utility:
+
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py
+```
+
+Select the appropriate hardware ID for the reservoir probe and the grow-pipe probe.
+
+The configuration utility:
+
+- refuses to leave a required probe role unassigned
+- refuses to assign the same hardware ID to both roles
+- creates a timestamped backup of the existing configuration before writing changes
+- leaves grow-pipe alarms disabled
+- leaves the monitor and dashboard services stopped until commissioning is complete
+
+### Verify the Saved Configuration
+
+To inspect the saved configuration:
+
+```bash
+python3 -m json.tool /opt/hydro-monitor/config.json | less
+```
+
+The temperature section should contain two different DS18B20 hardware IDs, similar to:
+
+```json
+"temperature": {
+  "reservoir_sensor_id": "28-...",
+  "grow_pipe_enabled": true,
+  "grow_pipe_sensor_id": "28-...",
+  "grow_pipe_alarm_enabled": false
+}
+```
+
+Press `q` to exit the configuration display.
+
+Do not enable the continuous monitor and dashboard services yet. Complete the hardware checks and commissioning procedure first.
 
 ## Updating an Existing Installation
 
