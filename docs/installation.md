@@ -27,17 +27,61 @@ The Version 9.1.2 installer checks the username and hostname before making syste
 The monitor and dashboard services are deliberately left stopped and disabled during installation. They are enabled only after the two DS18B20 probes have been assigned and the hardware self-test has passed.
 
 Hardware assembly and electrical connections are documented separately in [Wiring](wiring.md). Functional testing after installation is covered in [Commissioning](commissioning.md).
+
 ## Requirements
 
-The final installation guide will include:
+Before beginning the software installation, the following should be available.
 
-* supported Raspberry Pi model
-* recommended Raspberry Pi OS version
-* required network connection
-* required Python version
-* required Python packages
-* required system packages
-* expected hardware connections before first startup
+### Hardware
+
+- Raspberry Pi 3 Model B
+- SanDisk 64GB High Endurance microSDXC card
+- suitable 5.1 V / 2.5 A Micro USB power supply
+- completed or sufficiently assembled Version 9.1.2 controller hardware
+- DS3231 RTC module
+- both DS18B20 temperature probes connected for commissioning
+
+The remaining sensors and alarm outputs should also be connected before the final hardware self-test.
+
+### Raspberry Pi Setup
+
+The Raspberry Pi should already have Raspberry Pi OS installed and be able to boot normally.
+
+Configure the Raspberry Pi with the established project identity:
+
+| Setting | Value |
+|---|---|
+| Username | `hydroponics` |
+| Hostname | `hydro-monitor` |
+
+The installer checks both values and will stop without making system changes if they do not match.
+
+### Network
+
+The Raspberry Pi should be connected to the same local network as the computer used for installation.
+
+The installation procedure assumes that the Pi can be reached as `hydro-monitor.local`.
+
+Avahi/mDNS support is installed by the Version 9.1.2 installer.
+
+Internet access is useful during installation because the installer downloads required Raspberry Pi OS and Python packages.
+
+After installation, an Internet connection is **not required** for:
+
+- sensor monitoring
+- local LED and buzzer alarms
+- historical logging
+- the local dashboard
+
+Internet access is required only if optional Pushover notifications are enabled.
+
+### Installation Package
+
+Have the complete Version 9.1.2 release ZIP available on the computer from which the installation will be performed:
+
+`Hydro_Monitor_v9_1_2.zip`
+
+Do not copy individual files from the release package or omit supporting files. The supplied installer expects the complete extracted release structure.
 
 ## Prepare the Raspberry Pi
 
