@@ -280,7 +280,27 @@ ssh hydroponics@hydro-monitor.local
 
 ## Verify and Initialise the RTC
 
-Run the RTC verification utility:
+Before continuing, confirm that the DS3231 RTC module is physically fitted to the Raspberry Pi GPIO header.
+
+The Makerverse Protoboard is mounted using the **GPIO Header for Raspberry Pi B+ (Extra-long 2x20 Female Header)**. The extended pins remain accessible above the protoboard, allowing the RTC module to be fitted normally across Raspberry Pi physical pins 1, 3, 5, 7 and 9.
+
+**Power down the Raspberry Pi before fitting or removing the RTC module.**
+
+The RTC connections are:
+
+| RTC Position | Raspberry Pi Physical Pin | Function |
+|---:|---:|---|
+| 1 | 1 | 3.3 V |
+| 2 | 3 | GPIO2 / SDA |
+| 3 | 5 | GPIO3 / SCL |
+| 4 | 7 | NC |
+| 5 | 9 | GND |
+
+The RTC position over physical pin 7 is not electrically connected, so GPIO4 remains available for the DS18B20 1-Wire bus.
+
+For the complete physical wiring arrangement, see [Wiring](wiring.md).
+
+With the RTC correctly fitted to the GPIO pins, run the RTC verification utility:
 
 ```bash
 sudo /opt/hydro-monitor/verify_rtc.sh
