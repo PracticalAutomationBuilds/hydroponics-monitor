@@ -409,6 +409,114 @@ Do not alter configuration merely to complete this dashboard check.
 
 If the dashboard cannot be reached, reports stale monitor data, or displays values inconsistent with the physical sensor states, resolve the problem before continuing commissioning.
 
+## Alarm and Indicator Behaviour
+
+These tests are performed with the monitor and dashboard services running.
+
+Before beginning, allow any startup grace periods to finish and confirm the normal state:
+
+- green LED solid
+- amber LED off
+- red LED off
+- buzzer silent
+- dashboard showing no active alarm
+
+Optional Pushover notifications should remain disabled until the local alarm behaviour has been verified.
+
+### Low Reservoir Alarm
+
+Manually move the reservoir float to simulate a low-water condition. There is no need to drain the reservoir.
+
+While the low-water condition is being confirmed, the green LED should turn off.
+
+After approximately 30 seconds, confirm that:
+
+- the dashboard reports the reservoir level as low
+- `LOW_WATER` becomes the active alarm
+- the red LED illuminates
+- the green LED remains off
+- the buzzer gives one approximately 0.8-second beep every 3 seconds
+
+Return the float to its normal-water position.
+
+Confirm that:
+
+- the low-water alarm clears
+- the red LED turns off
+- the buzzer stops
+- the green LED returns to solid once all protected conditions are healthy
+
+### Return-Water Alarm
+
+Create a dry condition at the SEN0368 without unnecessarily interrupting circulation to the hydroponic system. For example, temporarily remove the sensor from the water being detected.
+
+Once the configured confirmation period has elapsed, confirm that:
+
+- the dashboard reports return water as absent
+- `FLOW_LOSS` becomes the active alarm
+- the red LED illuminates
+- the green LED is off
+- the buzzer gives two short beeps approximately every 4 seconds
+
+Return the SEN0368 to its normal wet condition.
+
+Confirm that the flow-loss alarm clears and normal indication is restored.
+
+### Alarm-Inhibit Function
+
+While a test alarm is active, operate the maintained alarm-inhibit switch.
+
+Confirm that:
+
+- the amber LED illuminates
+- the red LED turns off
+- the buzzer becomes silent
+- the green LED remains off
+- the dashboard shows that alarm override/inhibit is active
+- the underlying sensor condition remains visible on the dashboard
+
+Return the switch to its normal **alarms enabled** position.
+
+The alarm may not immediately reappear if the test fault is still present because the applicable confirmation or grace timing is restarted. Allow the system to complete that timing before judging the result.
+
+Restore the test condition to normal before continuing.
+
+### Reservoir Temperature Alarms
+
+The reservoir-temperature alarm can be tested without heating the hydroponic reservoir.
+
+Temporarily place the reservoir DS18B20 probe in a small container of controlled warm water while leaving the grow-pipe probe undisturbed.
+
+The established reservoir thresholds are:
+
+| State | Temperature |
+|---|---:|
+| Warning begins | 24.0 °C |
+| Critical begins | 25.0 °C |
+| Returns to normal | below 23.5 °C |
+
+Raise the probe temperature gradually and confirm that:
+
+- at 24.0 °C or above, `TEMP_WARNING` is reported
+- at 25.0 °C or above, `TEMP_CRITICAL` is reported
+- the red LED is illuminated while an alarm is active
+- the buzzer pattern changes appropriately between warning and critical states
+- the dashboard displays the same reservoir-temperature state
+
+Allow the probe to cool below 23.5 °C and confirm that the temperature alarm clears.
+
+Return the reservoir probe to its normal installed position after testing.
+
+Do not use boiling water, a heat gun or another uncontrolled heat source for this test.
+
+### Reservoir Sensor-Fault Alarm
+
+It is not necessary to disconnect live wiring merely to force a reservoir DS18B20 failure during commissioning.
+
+The physical probe connection and valid-reading path have already been checked by the hardware self-test, while the sensor-fault alarm logic is covered by the software release tests.
+
+Do not disturb powered terminal-block wiring solely to create this fault condition.
+
 ## Remote Notification Test
 
 Where remote notifications are enabled, trigger an appropriate test condition and confirm that:
