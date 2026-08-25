@@ -8,9 +8,22 @@ The wiring shown in this repository reflects the current prototype design and ma
 
 ## Raspberry Pi GPIO Assignments
 
-| Function | GPIO / Pin | Notes |
-| -------- | ---------- | ----- |
-|          |            |       |
+GPIO numbers use BCM numbering.
+
+| Function | BCM GPIO | Physical Pin | Interface / Notes |
+|---|---:|---:|---|
+| RTC SDA | GPIO2 | 3 | I²C |
+| RTC SCL | GPIO3 | 5 | I²C |
+| Reservoir DS18B20 DATA | GPIO4 | 7 | Shared 1-Wire bus |
+| Grow-pipe DS18B20 DATA | GPIO4 | 7 | Shared 1-Wire bus |
+| Reservoir low-level float | GPIO17 | 11 | External 10 kΩ pull-up to 3.3 V; fail-safe active-high fault |
+| Alarm-inhibit switch | GPIO18 | 12 | Maintained SPST switch to GND; internal pull-up |
+| DHT22 DATA | GPIO22 | 15 | Digital data |
+| SEN0368 return-water signal | GPIO24 | 18 | Q1 BC337 interface; water present = GPIO LOW |
+| Buzzer control | GPIO12 | 32 | Q2 BC337 low-side driver |
+| Red alarm LED | GPIO26 | 37 | External 330 Ω series resistor |
+| Amber inhibit LED | GPIO20 | 38 | External 330 Ω series resistor |
+| Green status LED | GPIO21 | 40 | External 330 Ω series resistor |
 
 ## Power Distribution
 
