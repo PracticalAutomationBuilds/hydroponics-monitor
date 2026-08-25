@@ -179,14 +179,116 @@ The 1-Wire interface used by the two DS18B20 probes is enabled after the project
 
 ## Install Project Software
 
-This section will document:
+This procedure is for a **fresh installation** of the Hydroponics Monitor.
 
-* cloning or downloading the repository
-* creating the project directory
-* installing Python dependencies
-* configuring file permissions
-* installing any required services
+Download the latest release ZIP from the project releases and transfer the complete package to the Raspberry Pi.
 
+The examples below use `Hydro_Monitor_v9_1_2.zip`. Replace that filename and the corresponding extracted directory name with those of the latest release.
+
+### Transfer the Release
+
+On the computer containing the downloaded release ZIP, open PowerShell in that directory.
+
+Transfer the ZIP to the Raspberry Pi:
+
+```powershell
+scp .\Hydro_Monitor_v9_1_2.zip hydroponics@hydro-monitor.local:~
+```
+
+Then connect to the Raspberry Pi:
+
+```powershell
+ssh hydroponics@hydro-monitor.local
+```
+
+### Extract the Release
+
+On the Raspberry Pi:
+
+```bash
+cd ~
+unzip Hydro_Monitor_v9_1_2.zip
+cd Hydro_Monitor_v9_1_2
+```
+
+Use Tab completion where useful to avoid mistyping the release filename or directory name.
+
+Do not run the installer from inside the ZIP file or copy only selected files from the release package.
+
+### Run the Installer
+
+Make the installer executable:
+
+```bash
+chmod +x install.sh
+```
+
+Run it with administrator privileges:
+
+```bash
+sudo ./install.sh
+```
+
+Before making system changes, the installer verifies that:
+
+- the user invoking `sudo` is `hydroponics`
+- the Raspberry Pi hostname is `hydro-monitor`
+
+If either value is incorrect, the installer stops.
+
+The installer then:
+
+- installs the required Raspberry Pi OS packages
+- creates `/opt/hydro-monitor`
+- creates the Python virtual environment
+- installs the monitor, dashboard and configuration utilities
+- creates the required log and state directories
+- installs the monitor and dashboard systemd services
+- configures the DS3231 RTC support
+- keeps Pushover credentials separate from dashboard backups
+- leaves the monitor and dashboard services stopped and disabled until commissioning is complete
+
+The services are intentionally **not started at this stage**. The two DS18B20 probes must first be assigned to their reservoir and grow-pipe roles and the hardware self-test must pass.
+
+### Enable 1-Wire
+
+After the installer completes, open Raspberry Pi configuration:
+
+```bash
+sudo raspi-config
+```
+
+Enable the **1-Wire** interface, then exit `raspi-config`.
+
+Reboot the Raspberry Pi:
+
+```bash
+sudo reboot
+```
+
+After the reboot, reconnect from the other computer:
+
+```powershell
+ssh hydroponics@hydro-monitor.local
+```
+
+### Verify the RTC
+
+Run the RTC verification utility:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh
+```
+
+Confirm that the Raspberry Pi has the correct time and that network time synchronisation is operating normally.
+
+Then synchronise the RTC from the system clock:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh --sync-from-system
+```
+
+The verification utility will not overwrite the RTC unless network time synchronisation has been confirmed.
 ## Configure Sensors
 
 This section will document:
