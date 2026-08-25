@@ -124,7 +124,47 @@ The DHT22 provides ambient temperature and relative-humidity data for the dashbo
 
 ### Return Water-Level Sensor
 
-Connection details will be added once the final hardware layout is confirmed.
+The return-water sensor is a DFRobot SEN0368 non-contact liquid-level sensor operating through its supplied 5 V adaptor.
+
+The adaptor connects to the controller through the 3-way TB3 terminal block.
+
+#### SEN0368 — TB3
+
+| Terminal | Connection |
+|---:|---|
+| 1 | 5 V / VIN |
+| 2 | GND |
+| 3 | IO2 signal to Q1 interface |
+
+The adaptor settings are:
+
+- top switch: VIN
+- IO1 jumper: UP
+- IO2 jumper: DOWN
+
+The blue IO1 lead is not used in this installation. Insulate it and secure it out of the way.
+
+#### Q1 Level-Shifting Interface
+
+Because the SEN0368 adaptor operates at 5 V, its IO2 signal must not be connected directly to a Raspberry Pi GPIO.
+
+A BC337 NPN transistor provides the interface:
+
+```text
+SEN0368 IO2 ---- 10 kΩ ---- Q1 base
+Q1 base -------- 100 kΩ --- GND
+Q1 emitter ---------------- GND
+Q1 collector -------------- GPIO24
+GPIO24 --------- 10 kΩ ---- 3.3 V
+
+The resulting Raspberry Pi logic is:
+
+water present: SEN0368 IO2 HIGH → Q1 ON → GPIO24 LOW
+no water: SEN0368 IO2 LOW → Q1 OFF → GPIO24 HIGH
+
+The software therefore treats the return-water input as active-low, with wet_level: 0.
+
+The 100 kΩ base pull-down and 10 kΩ GPIO24 pull-up perform separate functions and both are required.
 
 ### Low Reservoir Float Switch
 
