@@ -69,6 +69,32 @@ The external sensor and switch ground connections are returned to the appropriat
 
 The SEN0368 adaptor operates from 5 V, so its IO2 signal is interfaced to GPIO24 through the Q1 BC337 transistor circuit rather than being connected directly to the Raspberry Pi.
 
+### BC337 Transistor Orientation
+
+Both Q1 and Q2 use the BC337 NPN transistor.
+
+The wiring and board layout in this project assume the BC337 lead order:
+
+**C - B - E**
+
+where:
+
+- **C** = Collector
+- **B** = Base
+- **E** = Emitter
+
+For the selected TO-92 BC337, the datasheet identifies the leads as:
+
+| Lead | Function |
+|---:|---|
+| 1 | Collector |
+| 2 | Base |
+| 3 | Emitter |
+
+The protoboard layout and wiring diagrams are designed around this C-B-E arrangement.
+
+Do not assume that another NPN transistor has the same lead order. If substituting a different transistor, check its datasheet and adapt the physical layout accordingly.
+
 ## Sensors
 
 ### DS18B20 Temperature Sensors
