@@ -51,6 +51,19 @@ This bill of materials reflects the current prototype build and may change befor
 
 ## Mechanical and Enclosure Components
 
+The final enclosure has not yet been selected.
+
+The enclosure requirements are currently:
+
+- IP68-rated construction
+- clear lid
+- gasketed lid seal
+- sufficient internal space for the assembled Raspberry Pi, RTC and Makerverse Protoboard stack
+- sufficient panel area for the three 10 mm status LEDs and maintained rocker switch
+- provision for suitable cable glands and strain relief
+
+The exact enclosure model, size, supplier and cable-gland requirements will be added after the permanent controller board has been assembled and its required clearances can be measured.
+
 | Qty | Component | Part / Model | Supplier | Notes |
 | --: | --------- | ------------ | -------- | ----- |
 |     |           |              |          |       |
