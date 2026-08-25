@@ -344,6 +344,71 @@ Do not continue commissioning until both services remain running without unexpec
 
 The services are now enabled to start automatically whenever the Raspberry Pi boots.
 
+## Dashboard Test
+
+From another computer or device on the same local network, open:
+
+`http://hydro-monitor.local:8080/`
+
+The dashboard should load and show a **Live** connection state rather than stale or unavailable monitor data.
+
+### Monitor Page
+
+Confirm that the displayed values are plausible and agree with the physical state of the system:
+
+- Return water
+- Reservoir level
+- Reservoir temperature
+- Grow-pipe airspace temperature
+- Pipe − reservoir temperature difference
+- Grow-pipe probe status
+- Ambient temperature
+- Relative humidity
+- Alarm override
+- Active alarm
+- Phone notification status
+- Monitor uptime
+- Raspberry Pi temperature
+
+With the system in its normal commissioning state:
+
+- Return water should match the actual SEN0368 condition
+- Reservoir level should match the float-switch position
+- Alarm override should show that alarms are enabled
+- no unexpected active alarm should be present
+- the reservoir and grow-pipe temperatures should correspond to the probes assigned during installation
+
+The dashboard refreshes current monitor information automatically. Leave it open for several update cycles and confirm that readings continue to update without requiring a manual page refresh.
+
+### History
+
+Confirm that the temperature-history display contains separate series for:
+
+- reservoir temperature
+- grow-pipe airspace temperature
+- ambient temperature
+
+Also confirm that the relative-humidity history is available.
+
+A newly commissioned installation will naturally contain only a small amount of historical data. Longer time ranges will populate as the monitor continues operating.
+
+### System Information
+
+Open the **System information** tab and confirm that system information is displayed without errors, including the Raspberry Pi and RTC status.
+
+### Configuration and Downloads
+
+Open the **Configuration & backups** tab and confirm that it loads successfully.
+
+At minimum, verify that the available read-only downloads can be accessed, including:
+
+- readings CSV
+- event log
+
+Do not alter configuration merely to complete this dashboard check.
+
+If the dashboard cannot be reached, reports stale monitor data, or displays values inconsistent with the physical sensor states, resolve the problem before continuing commissioning.
+
 ## Remote Notification Test
 
 Where remote notifications are enabled, trigger an appropriate test condition and confirm that:
@@ -351,16 +416,6 @@ Where remote notifications are enabled, trigger an appropriate test condition an
 * the notification is received
 * the message identifies the correct condition
 * repeated notifications behave as intended
-
-## Dashboard Test
-
-Confirm that the dashboard:
-
-* loads correctly from another device on the local network
-* displays all expected sensor readings
-* displays system and alarm status correctly
-* updates readings as expected
-* records historical information where applicable
 
 ## Restart Test
 
