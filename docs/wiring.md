@@ -169,7 +169,38 @@ The 100 kΩ base pull-down and 10 kΩ GPIO24 pull-up perform separate functions 
 
 ### Low Reservoir Float Switch
 
-Connection details will be added once the final hardware layout is confirmed.
+The reservoir low-water detector is a passive float switch connected through the 4-way TB1 terminal block.
+
+TB1 is shared with the maintained alarm-inhibit switch.
+
+#### Reservoir Float — TB1
+
+| Terminal | Connection |
+|---:|---|
+| 3 | Reservoir float signal / GPIO17 |
+| 4 | GND |
+
+The float-switch input uses an external **10 kΩ pull-up resistor to 3.3 V**.
+
+The circuit is:
+
+```text
+3.3 V
+  |
+10 kΩ
+  |
+GPIO17 -------- float switch -------- GND
+```
+
+The switch is arranged so that:
+
+- acceptable reservoir level = switch closed to GND = GPIO17 LOW
+- low reservoir level = switch open = GPIO17 HIGH
+- broken or disconnected float-switch wiring = open circuit = GPIO17 HIGH
+
+This provides fail-safe behaviour: a disconnected or broken float-switch circuit produces the same fault state as a genuinely low reservoir level.
+
+The software therefore treats GPIO17 HIGH as the reservoir low-level alarm condition.
 
 ## Indicators and Alarm
 
