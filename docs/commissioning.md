@@ -27,15 +27,54 @@ The system should not be relied upon for unattended monitoring until the applica
 
 ## Before Applying Power
 
+Complete these checks with the Raspberry Pi power supply disconnected.
+
+### Visual Inspection
+
 Confirm that:
 
-* all wiring matches the final wiring documentation
-* power and ground connections are correct
-* sensor polarity has been checked
-* no solder bridges or unintended connections are present
-* terminal-block screws are secure
-* exposed conductors cannot short against adjacent terminals or hardware
-* the Raspberry Pi and connected devices are receiving the correct supply voltage
+- all wiring matches the current [Wiring](wiring.md) documentation
+- the Makerverse Protoboard is fully seated on the Raspberry Pi GPIO header
+- the DS3231 RTC is fitted in the correct position on the exposed extra-long GPIO header
+- terminal blocks are in their documented TB1–TB6 positions and their connections have not been transposed
+- the DS18B20, DHT22 and SEN0368 power connections have the correct polarity
+- the three LEDs have the correct polarity and each has its 330 Ω series resistor
+- Q1 and Q2 are fitted with the correct transistor lead orientation
+- the required pull-up and pull-down resistors are fitted in the correct locations
+- no solder bridges, loose wire strands or unintended connections are visible
+- terminal-block screws are secure
+- unused conductors, including the SEN0368 IO1 wire, are insulated so that they cannot contact other circuitry
+
+### Protoboard Inspection
+
+Inspect both sides of the permanent board before fitting it into the enclosure.
+
+Pay particular attention to:
+
+- solder joints between adjacent protoboard pads
+- underside links and bent component leads
+- the areas around the 3.3 V, 5 V and ground connections
+- clearance between solder joints or component leads and the Raspberry Pi below
+
+A standard Raspberry Pi 3 Model B should not normally create a clearance problem. If a large aftermarket heatsink is fitted, confirm that no component lead, solder joint or underside link can contact it.
+
+### Basic Electrical Checks
+
+Before connecting power, use a multimeter to check for obvious unintended shorts between:
+
+- 3.3 V and ground
+- 5 V and ground
+- 3.3 V and 5 V
+
+Also confirm continuity through any underside links or connections that will no longer be easily accessible once the controller is enclosed.
+
+Do not continue to power-up if an unexpected short or uncertain connection is found.
+
+### Final Check
+
+Confirm that all external sensor and control cables are connected to the intended terminal blocks before applying power.
+
+If any wiring is changed during these checks, repeat the inspection before continuing.
 
 ## Initial Power-Up
 
