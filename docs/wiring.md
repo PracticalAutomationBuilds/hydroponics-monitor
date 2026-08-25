@@ -204,13 +204,62 @@ The software therefore treats GPIO17 HIGH as the reservoir low-level alarm condi
 
 ## Indicators and Alarm
 
-This section will document:
+The controller uses three panel-mounted 10 mm LEDs, one maintained alarm-inhibit rocker switch and one PCB-mounted 5 V active buzzer.
 
-* status LEDs
-* current-limiting resistors
-* buzzer
-* transistor/interface circuitry
-* pull-up or pull-down resistors where required
+### Alarm-Inhibit Switch — TB1
+
+TB1 is shared with the reservoir float switch.
+
+| Terminal | Connection |
+|---:|---|
+| 1 | Alarm-inhibit input / GPIO18 |
+| 2 | GND |
+
+The maintained SPST rocker switch connects GPIO18 to GND when alarms are inhibited.
+
+GPIO18 uses the Raspberry Pi internal pull-up, so:
+
+- switch open = GPIO18 HIGH = alarms enabled
+- switch closed = GPIO18 LOW = alarms inhibited
+
+### Enclosure LEDs — TB6
+
+The three panel-mounted LEDs connect through the 6-way TB6 terminal block.
+
+| Terminal | Connection |
+|---:|---|
+| 1 | Red LED anode feed from GPIO26 through 330 Ω |
+| 2 | Red LED cathode / GND |
+| 3 | Amber LED anode feed from GPIO20 through 330 Ω |
+| 4 | Amber LED cathode / GND |
+| 5 | Green LED anode feed from GPIO21 through 330 Ω |
+| 6 | Green LED cathode / GND |
+
+Each LED requires its own external **330 Ω series resistor**.
+
+The LED functions are:
+
+- red = confirmed active alarm
+- amber = alarms inhibited
+- green = healthy/startup status
+
+### Buzzer Driver — Q2
+
+The 5 V active buzzer is mounted directly on the Makerverse Protoboard rather than connected through a terminal block.
+
+A BC337 NPN transistor provides low-side switching from GPIO12:
+
+```text
+GPIO12 --------- 1 kΩ ----- Q2 base
+Q2 base -------- 10 kΩ ---- GND
+Q2 emitter ---------------- GND
+Q2 collector -------------- buzzer negative
+5 V ----------------------- buzzer positive
+```
+
+The 10 kΩ base pull-down keeps the buzzer off while GPIO12 is floating during boot or shutdown.
+
+The selected active buzzer is treated as non-inductive, so no flyback diode is required.
 
 ## RTC Module
 
