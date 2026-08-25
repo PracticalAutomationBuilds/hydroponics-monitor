@@ -72,10 +72,17 @@ The exact enclosure model, size, supplier and cable-gland requirements will be a
 
 ## Optional Items
 
-| Qty | Component | Part / Model | Supplier | Notes |
-| --: | --------- | ------------ | -------- | ----- |
-|     |           |              |          |       |
+No optional hardware is currently specified for the Version 9.1.2 build.
+
+Pushover remote notifications are optional and do not require additional project hardware. The local dashboard, LEDs, buzzer and monitoring functions operate without Pushover.
 
 ## Notes
+
+- Supplier entries identify convenient sources for reproducing the project and do not necessarily indicate where the components used in the original build were purchased.
+- Where practical, components have been consolidated around a small number of Australian suppliers.
+- Equivalent components may be substituted only where their electrical characteristics, pinout, physical dimensions and mounting requirements are compatible with the documented design.
+- Resistor quantities shown in the resistor-assortment entry refer to the values actually required by the completed controller.
+- The final IP68 enclosure and associated cable glands have not yet been selected. These items will be added after the assembled Raspberry Pi, RTC and Makerverse Protoboard stack has been measured for the required enclosure clearances.
+- The bill of materials will be updated if the physical prototype identifies any required changes before the first stable release.
 
 Exact supplier links and substitutions will be added once the prototype hardware configuration has been finalised and tested.
