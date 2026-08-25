@@ -150,7 +150,6 @@ Because the SEN0368 adaptor operates at 5 V, its IO2 signal must not be connecte
 
 A BC337 NPN transistor provides the interface:
 
-```text
 SEN0368 IO2 ---- 10 kΩ ---- Q1 base
 Q1 base -------- 100 kΩ --- GND
 Q1 emitter ---------------- GND
