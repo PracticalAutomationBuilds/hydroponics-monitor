@@ -356,7 +356,50 @@ All terminal blocks are 0.1-inch / 2.54 mm pitch side-entry screw terminals.
 
 ## Prototype Board Layout
 
-A final component-placement diagram and underside wiring plan will be added after the physical board has been assembled and tested.
+The permanent controller is assembled on a Makerverse Protoboard for Raspberry Pi using the extra-long 2×20 GPIO header.
+
+The final board includes:
+
+- TB1 — 4-way terminal block for the alarm-inhibit switch and reservoir float
+- TB2 — 3-way terminal block for the DHT22
+- TB3 — 3-way terminal block for the SEN0368 adaptor
+- TB4 — 3-way terminal block for the reservoir DS18B20
+- TB5 — 3-way terminal block for the grow-pipe DS18B20
+- TB6 — 6-way terminal block for the three enclosure LEDs
+- Q1 — BC337 interface for the SEN0368
+- Q2 — BC337 low-side driver for the active buzzer
+- BZ1 — PCB-mounted 5 V active buzzer
+- the required pull-up, pull-down, base and LED series resistors
+- underside soldered links where required
+
+### Raspberry Pi Heatsink Keepout
+
+A standard Raspberry Pi 3 Model B does not normally create a clearance problem beneath the Makerverse Protoboard.
+
+If an aftermarket heatsink has been fitted, particularly a large or tall model, check the available clearance before finalising the protoboard layout.
+
+A heatsink may occupy space beneath part of the Makerverse board and prevent some protoboard holes from being used for component leads, solder joints or underside links.
+
+Where this occurs:
+
+- components may still extend over the affected area if there is adequate vertical clearance
+- do not use any blocked protoboard holes for component leads
+- do not place solder joints or underside links where they could contact the heatsink
+- verify clearance before powering the assembled board
+
+This is not normally an issue with an unmodified Raspberry Pi.
+
+### RTC Clearance
+
+The extra-long GPIO header passes through the Makerverse Protoboard and leaves the upper GPIO pins exposed.
+
+The DS3231 RTC module is fitted above the protoboard on these exposed pins, so component placement must also preserve sufficient clearance around the RTC.
+
+### Final Pad-by-Pad Layout
+
+The exact pad-by-pad component-placement diagram and underside-link map will be added to the `hardware/` directory after the permanent controller has been assembled, continuity-tested and confirmed against the Version 9.1.2 wiring.
+
+The verified hardware drawing, rather than an earlier working layout, will be treated as the authoritative physical-board reference.
 
 ## Wiring Diagram
 
