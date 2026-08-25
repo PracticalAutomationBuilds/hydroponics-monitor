@@ -290,21 +290,59 @@ Override switch active: True
 
 Return the switch to its normal **alarms enabled** position before continuing commissioning.
 
-## Indicator Tests
+## Start and Check Services
 
-Test each visual indicator individually and confirm that:
+Once the hardware self-test and individual sensor/input checks have passed, the continuous monitor and dashboard services can be enabled.
 
-* the correct LED activates
-* the indicated condition matches the dashboard
-* normal status is restored when the test condition is removed
+Before continuing, return the alarm-inhibit switch to its normal **alarms enabled** position.
 
-## Audible Alarm Test
+Enable and start both services:
 
-Trigger an alarm condition and confirm that:
+```bash
+sudo systemctl enable --now hydro-monitor.service hydro-dashboard.service
+```
 
-* the buzzer operates
-* the correct fault is displayed
-* the alarm clears or resets as designed
+Check the monitor service:
+
+```bash
+systemctl status hydro-monitor.service
+```
+
+It should show:
+
+```text
+active (running)
+```
+
+Check the dashboard service:
+
+```bash
+systemctl status hydro-dashboard.service
+```
+
+It should also show:
+
+```text
+active (running)
+```
+
+Press `q` to exit either status display.
+
+If a service does not start successfully, inspect its recent log messages:
+
+```bash
+journalctl -u hydro-monitor.service -n 100 --no-pager
+```
+
+or:
+
+```bash
+journalctl -u hydro-dashboard.service -n 100 --no-pager
+```
+
+Do not continue commissioning until both services remain running without unexpected errors.
+
+The services are now enabled to start automatically whenever the Raspberry Pi boots.
 
 ## Remote Notification Test
 
