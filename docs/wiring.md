@@ -69,7 +69,7 @@ The external sensor and switch ground connections are returned to the appropriat
 
 The SEN0368 adaptor operates from 5 V, so its IO2 signal is interfaced to GPIO24 through the Q1 BC337 transistor circuit rather than being connected directly to the Raspberry Pi.
 
-### BC337 Transistor Orientation
+## BC337 Transistor Orientation
 
 Both Q1 and Q2 use the BC337 NPN transistor.
 
