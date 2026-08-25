@@ -108,7 +108,19 @@ The two sensors are distinguished in software by their unique DS18B20 hardware I
 
 ### Ambient Temperature and Humidity Sensor
 
-Connection details will be added once the final hardware layout is confirmed.
+The ambient sensor is a Core Electronics DHT22 module connected through the 3-way TB2 terminal block.
+
+#### DHT22 — TB2
+
+| Terminal | Connection |
+|---:|---|
+| 1 | 3.3 V |
+| 2 | DATA / GPIO22 |
+| 3 | GND |
+
+The DHT22 module used for this project already includes its required support components, so **no additional DHT22 pull-up resistor is fitted on the Makerverse Protoboard**.
+
+The DHT22 provides ambient temperature and relative-humidity data for the dashboard and historical logging. It is informational only and does not directly trigger the system alarms.
 
 ### Return Water-Level Sensor
 
