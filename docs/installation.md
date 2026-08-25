@@ -4,12 +4,29 @@
 
 **Work in progress.**
 
-These instructions are being developed alongside the prototype system and may change before the first stable release.
+These instructions document the current Version 9.1.2 installation process and will be refined as the permanent controller is assembled and commissioned.
+
+The procedures in this repository should be treated as the current confirmed installation method unless superseded by a later release.
 
 ## Overview
 
-This document will describe the complete software installation process, starting with a prepared Raspberry Pi and ending with the Hydroponics Monitor running as intended.
+This guide covers installation of the Hydroponics Monitor software on a prepared Raspberry Pi, from the initial Raspberry Pi OS setup through to the point where the system is ready for commissioning.
 
+The established Raspberry Pi identity for this project is:
+
+| Item | Value |
+|---|---|
+| Username | `hydroponics` |
+| Hostname | `hydro-monitor` |
+| SSH address | `hydroponics@hydro-monitor.local` |
+| Installation directory | `/opt/hydro-monitor` |
+| Dashboard address | `http://hydro-monitor.local:8080/` |
+
+The Version 9.1.2 installer checks the username and hostname before making system changes.
+
+The monitor and dashboard services are deliberately left stopped and disabled during installation. They are enabled only after the two DS18B20 probes have been assigned and the hardware self-test has passed.
+
+Hardware assembly and electrical connections are documented separately in [Wiring](wiring.md). Functional testing after installation is covered in [Commissioning](commissioning.md).
 ## Requirements
 
 The final installation guide will include:
