@@ -4,11 +4,26 @@
 
 **Work in progress.**
 
-This commissioning procedure will be finalised after the prototype hardware has been assembled and tested.
+This procedure documents commissioning of the completed Hydroponics Monitor after the software installation and initial configuration described in [Installation](installation.md).
+
+The procedure will be refined as the permanent controller is assembled and tested.
 
 ## Purpose
 
-Commissioning verifies that the Hydroponics Monitor hardware, sensors, alarms, dashboard and notification functions are operating correctly before the system is placed into normal service.
+Commissioning verifies that the completed Hydroponics Monitor hardware and software are operating correctly before the system is placed into normal unattended service.
+
+The process includes:
+
+- checking the completed wiring before power is applied
+- running the supplied hardware self-test
+- verifying each sensor and alarm input
+- testing the LEDs and buzzer
+- enabling and starting the monitor and dashboard services
+- checking the local dashboard
+- testing optional remote notifications, where configured
+- confirming that the system recovers correctly after a reboot
+
+The system should not be relied upon for unattended monitoring until the applicable commissioning checks have passed.
 
 ## Before Applying Power
 
