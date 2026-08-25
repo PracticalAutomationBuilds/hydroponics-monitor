@@ -263,7 +263,25 @@ The selected active buzzer is treated as non-inductive, so no flyback diode is r
 
 ## RTC Module
 
-The real-time clock connection and GPIO/header arrangement will be documented here.
+The real-time clock is a Jaycar Electronics XC9044 DS3231 module mounted directly on the Raspberry Pi GPIO header.
+
+The Makerverse Protoboard for Raspberry Pi is fitted using a **GPIO Header for Raspberry Pi B+ (Extra-long 2x20 Female Header)** from Core Electronics. The extended upper pins pass through the Makerverse board and remain exposed above it, allowing the RTC module to be fitted to the Raspberry Pi header positions in the normal way.
+
+The RTC occupies the odd-numbered header positions shown below:
+
+| RTC Position | Raspberry Pi Physical Pin | Function |
+|---:|---:|---|
+| 1 | 1 | 3.3 V |
+| 2 | 3 | GPIO2 / SDA |
+| 3 | 5 | GPIO3 / SCL |
+| 4 | 7 | NC on RTC module |
+| 5 | 9 | GND |
+
+The RTC communicates with the Raspberry Pi over I²C using GPIO2 and GPIO3.
+
+The RTC position above physical pin 7 is **not connected internally on the RTC module**, so it does not electrically consume GPIO4. GPIO4 therefore remains available for the shared DS18B20 1-Wire bus.
+
+The Raspberry Pi must be powered down before fitting or removing the Makerverse Protoboard or RTC module.
 
 ## Terminal Blocks
 
