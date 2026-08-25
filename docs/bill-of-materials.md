@@ -12,7 +12,7 @@ This bill of materials reflects the current prototype build and may change befor
 |---:|---|---|---|---|
 | 1 | Single-board computer | Raspberry Pi 3 Model B | Core Electronics | Main controller |
 | 1 | Prototyping board | Makerverse Protoboard for Raspberry Pi | Core Electronics | Permanent soldered controller board; mounts directly on the Raspberry Pi GPIO header |
-| 1 | Real-time clock | DS3231 RTC module, XC9044 | Jaycar | Battery-backed clock; uses GPIO2/GPIO3 for I²C |
+| 1 | Real-time clock | DS3231 RTC module, XC9044 | Jaycar Electronics | Battery-backed clock; uses GPIO2/GPIO3 for I²C |
 
 ## Sensors
 
@@ -21,7 +21,7 @@ This bill of materials reflects the current prototype build and may change befor
 | 2 | Waterproof digital temperature probe | DS18B20 | Core Electronics | Reservoir and grow-pipe probes; share the GPIO4 1-Wire bus |
 | 1 | Ambient temperature and humidity module | DHT22 | Core Electronics | 3.3 V; data on GPIO22 |
 | 1 | Non-contact return-water sensor | DFRobot SEN0368 | Core Electronics | Powered from 5 V; IO2 interfaces to GPIO24 through Q1; IO1 is unused |
-| 1 | Reservoir low-water float switch | SF0920 | Jaycar | Passive contact; fail-safe input to GPIO17 using an external 10 kΩ pull-up |
+| 1 | Reservoir low-water float switch | SF0920 | Jaycar Electronics | Passive contact; fail-safe input to GPIO17 using an external 10 kΩ pull-up |
 
 ## Indicators and Alarms
 
