@@ -278,7 +278,7 @@ After the reboot, reconnect from the other computer:
 ssh hydroponics@hydro-monitor.local
 ```
 
-### Verify the RTC
+## Verify and Initialise the RTC
 
 Run the RTC verification utility:
 
@@ -296,7 +296,7 @@ sudo /opt/hydro-monitor/verify_rtc.sh --sync-from-system
 
 The verification utility will not overwrite the RTC unless network time synchronisation has been confirmed.
 
-## Assign the DS18B20 Temperature Probes
+## Assign the Temperature Probes
 
 The two DS18B20 probes share the same GPIO4 1-Wire bus. Each probe has a unique hardware ID, and the Hydroponics Monitor uses those IDs to distinguish the reservoir probe from the grow-pipe probe.
 
