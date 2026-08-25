@@ -519,11 +519,105 @@ Do not disturb powered terminal-block wiring solely to create this fault conditi
 
 ## Remote Notification Test
 
-Where remote notifications are enabled, trigger an appropriate test condition and confirm that:
+Pushover notifications are optional.
 
-* the notification is received
-* the message identifies the correct condition
-* repeated notifications behave as intended
+If Pushover will not be used, skip this section. The Hydroponics Monitor does not require Internet access for local sensing, logging, dashboard operation, LEDs or audible alarms.
+
+Configure Pushover only after the local alarm and indicator tests have passed.
+
+### Configure Pushover
+
+Create a Pushover account and a dedicated Application/API Token for the Hydroponics Monitor.
+
+You will need:
+
+- the Pushover User Key
+- the dedicated Application API Token
+- optionally, the name of a specific Pushover device
+
+Do not place these credentials in the GitHub repository, screenshots, documentation or other public files.
+
+On the Raspberry Pi, run:
+
+```bash
+sudo /opt/hydro-monitor/configure_pushover.py
+```
+
+Enter the requested credentials when prompted.
+
+Press Enter at the optional device-name prompt if notifications should be delivered to all active devices associated with the Pushover account.
+
+The configuration utility validates the supplied credentials, stores them separately from the ordinary monitor configuration, enables phone notifications and sends a harmless setup-test message.
+
+Confirm that the test notification is received.
+
+### Check Notification Status
+
+Run:
+
+```bash
+sudo /opt/hydro-monitor/configure_pushover.py --status
+```
+
+Then check the dashboard.
+
+**Phone notifications** should report:
+
+```text
+Ready
+```
+
+The Pushover User Key and Application API Token must not be visible in the dashboard or downloadable configuration backups.
+
+### Send Another Test Notification
+
+A further harmless test message can be sent at any time with:
+
+```bash
+sudo /opt/hydro-monitor/configure_pushover.py --test-only
+```
+
+Confirm that the message arrives on the intended phone or device.
+
+### Test Real Alarm Notifications
+
+With the system supervised, repeat suitable alarm tests that were already verified locally.
+
+At minimum, confirm that:
+
+- a sustained low-reservoir condition produces a `Reservoir level LOW` notification
+- restoring the reservoir float produces the corresponding cleared notification
+- sustained loss of return water produces a `Return flow LOST` notification
+- restoring return-water detection produces the corresponding restored notification
+
+Confirm that the notification identifies the same condition shown by the dashboard and local indicators.
+
+### Test Alarm Inhibit
+
+Create a test alarm condition while the alarm-inhibit switch is active.
+
+Confirm that:
+
+- the dashboard still shows the underlying sensor condition
+- no red LED alarm is produced
+- the buzzer remains silent
+- no Pushover alarm notification is sent
+
+Return the switch to **alarms enabled** and restore the test condition to normal when finished.
+
+### Internet Independence
+
+If practical, temporarily disconnect the Raspberry Pi from Internet access while leaving the local network and controller operating.
+
+Trigger a suitable test alarm and confirm that:
+
+- the local dashboard continues operating
+- the local LEDs and buzzer continue operating normally
+- loss of Internet access does not interfere with sensor monitoring
+
+Restore Internet access after the test.
+
+Pushover is an additional remote warning path and should not be treated as a replacement for the local alarm system.
 
 ## Restart Test
 
