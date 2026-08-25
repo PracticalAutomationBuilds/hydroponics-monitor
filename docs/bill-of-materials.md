@@ -43,8 +43,11 @@ This bill of materials reflects the current prototype build and may change befor
 ## Connectors and Wiring
 
 | Qty | Component | Part / Model | Supplier | Notes |
-| --: | --------- | ------------ | -------- | ----- |
-|     |           |              |          |       |
+|---:|---|---|---|---|
+| 2 packs | 3-pin side-entry screw terminal block | Screw Terminal Block: 3-Pin, 0.1" Pitch, Side Entry (3-Pack) | Core Electronics | Four blocks used: DHT22, SEN0368, reservoir DS18B20 and grow-pipe DS18B20. |
+| 1 pack | 4-pin side-entry screw terminal block | Screw Terminal Block: 4-Pin, 0.1" Pitch, Side Entry (2-Pack) | Core Electronics | One block used for the maintained alarm-inhibit switch and reservoir float switch. |
+| 1 | 6-pin side-entry screw terminal block | Screw Terminal Block: 6-Pin, 0.1" Pitch, Side Entry | Core Electronics | One block provides separate anode and GND connections for the red, amber and green enclosure LEDs. |
+| 1 kit | Stranded silicone hookup wire | Silicone Hookup Wire Kit, 22 AWG, 6 Colours | Core Electronics | Used for internal controller and enclosure wiring; multiple colours simplify identification of power, ground and signal connections. |
 
 ## Mechanical and Enclosure Components
 
