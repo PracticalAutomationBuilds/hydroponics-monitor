@@ -76,15 +76,57 @@ Confirm that all external sensor and control cables are connected to the intende
 
 If any wiring is changed during these checks, repeat the inspection before continuing.
 
-## Initial Power-Up
+## Commissioning Power-Up
 
-The final procedure will include checks for:
+After completing the pre-power checks, connect the Raspberry Pi power supply and allow the system to boot normally.
 
-* successful Raspberry Pi boot
-* automatic startup of the monitoring software
-* dashboard availability
-* absence of unexpected error messages
-* correct system date and time
+The Hydroponics Monitor and dashboard services should still be **stopped and disabled**. They are not started until the hardware self-test and the remaining commissioning checks have been completed successfully.
+
+Connect to the Raspberry Pi by SSH:
+
+```powershell
+ssh hydroponics@hydro-monitor.local
+```
+
+Confirm that the monitor service is disabled:
+
+```bash
+systemctl is-enabled hydro-monitor.service
+```
+
+The expected result is:
+
+```text
+disabled
+```
+
+Confirm that the dashboard service is also disabled:
+
+```bash
+systemctl is-enabled hydro-dashboard.service
+```
+
+The expected result is:
+
+```text
+disabled
+```
+
+Check the Raspberry Pi system time:
+
+```bash
+date
+```
+
+Confirm that the displayed date, time and timezone are correct.
+
+If either Hydroponics Monitor service is unexpectedly enabled or running, stop and disable both before continuing:
+
+```bash
+sudo systemctl disable --now hydro-monitor.service hydro-dashboard.service
+```
+
+Do not enable the services yet.
 
 ## Sensor Tests
 
