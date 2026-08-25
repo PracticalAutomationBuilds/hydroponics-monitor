@@ -39,7 +39,7 @@ Confirm that:
 - terminal blocks are in their documented TB1–TB6 positions and their connections have not been transposed
 - the DS18B20, DHT22 and SEN0368 power connections have the correct polarity
 - the three LEDs have the correct polarity and each has its 330 Ω series resistor
-- Q1 and Q2 are fitted with the correct transistor lead orientation
+- Q1 and Q2 are fitted in the documented C-B-E orientation
 - the required pull-up and pull-down resistors are fitted in the correct locations
 - no solder bridges, loose wire strands or unintended connections are visible
 - terminal-block screws are secure
