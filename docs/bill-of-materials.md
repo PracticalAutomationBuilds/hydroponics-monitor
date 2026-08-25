@@ -36,8 +36,9 @@ This bill of materials reflects the current prototype build and may change befor
 ## Interface and Protection Components
 
 | Qty | Component | Part / Model | Supplier | Notes |
-| --: | --------- | ------------ | -------- | ----- |
-|     |           |              |          |       |
+|---:|---|---|---|---|
+| 2 | NPN transistor | Transistor - NPN (BC337) | Core Electronics | Q1 interfaces the 5 V SEN0368 output to the Raspberry Pi; Q2 is the 5 V buzzer low-side driver. Confirm collector, base and emitter orientation before soldering. |
+| 1 pack | 1/4 W, 1% through-hole resistor assortment | CE05092 — 600 Pack of 1/4 Watt 1% Resistors | Core Electronics | Provides all resistor values required for the build: 330 Ω × 3, 1 kΩ × 1, 4.7 kΩ × 1, 10 kΩ × 4 and 100 kΩ × 1. |
 
 ## Connectors and Wiring
 
