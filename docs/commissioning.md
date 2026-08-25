@@ -621,13 +621,107 @@ Pushover is an additional remote warning path and should not be treated as a rep
 
 ## Restart Test
 
-Restart the Raspberry Pi and confirm that:
+After all applicable commissioning tests have passed, perform a final controlled reboot.
 
-* the system boots normally
-* monitoring software starts automatically
-* sensors are detected again
-* the dashboard becomes available
-* normal monitoring resumes without manual intervention
+Before rebooting, confirm that:
+
+- all temporary test conditions have been removed
+- the reservoir float is in its normal-water position
+- the SEN0368 is detecting return water normally
+- the alarm-inhibit switch is set to **alarms enabled**
+- no unexpected alarm is active
+
+Reboot the Raspberry Pi:
+
+```bash
+sudo reboot
+```
+
+Allow the Raspberry Pi to restart normally.
+
+After approximately one to two minutes, reconnect by SSH:
+
+```powershell
+ssh hydroponics@hydro-monitor.local
+```
+
+### Check Automatic Service Startup
+
+Confirm that the monitor service restarted automatically:
+
+```bash
+systemctl is-active hydro-monitor.service
+```
+
+The expected result is:
+
+```text
+active
+```
+
+Confirm the dashboard service:
+
+```bash
+systemctl is-active hydro-dashboard.service
+```
+
+The expected result is:
+
+```text
+active
+```
+
+Also confirm that both services remain enabled for future boots:
+
+```bash
+systemctl is-enabled hydro-monitor.service
+systemctl is-enabled hydro-dashboard.service
+```
+
+Each should report:
+
+```text
+enabled
+```
+
+### Check RTC and System Time
+
+Check the current system time:
+
+```bash
+date
+```
+
+Confirm that the date, time and timezone are correct.
+
+Run the RTC verification utility:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh
+```
+
+Confirm that the RTC is detected and operating normally.
+
+### Check Normal Monitoring
+
+Open:
+
+`http://hydro-monitor.local:8080/`
+
+Confirm that:
+
+- the dashboard becomes available without manual intervention
+- the connection state returns to **Live**
+- both DS18B20 probes are detected
+- the DHT22 is reporting
+- the return-water and reservoir-level states are correct
+- no unexpected alarm is active
+- the green LED returns to its normal operating state after any startup grace period
+- historical logging resumes
+
+If Pushover is configured, confirm that the dashboard again reports phone notifications as ready.
+
+The system should recover from the reboot without requiring any manual software restart, sensor reassignment or configuration change.
 
 ## Final Acceptance
 
