@@ -4,7 +4,7 @@
 
 **Work in progress.**
 
-These instructions document the current Version 9.1.2 installation process and will be refined as the permanent controller is assembled and commissioned.
+These instructions document the current installation process for the latest Hydroponics Monitor release, and will be refined as the permanent controller is assembled and commissioned.
 
 The procedures in this repository should be treated as the current confirmed installation method unless superseded by a later release.
 
@@ -37,7 +37,7 @@ Before beginning the software installation, the following should be available.
 - Raspberry Pi 3 Model B
 - SanDisk 64GB High Endurance microSDXC card
 - suitable 5.1 V / 2.5 A Micro USB power supply
-- completed or sufficiently assembled Version 9.1.2 controller hardware
+- completed or sufficiently assembled controller hardware
 - DS3231 RTC module
 - both DS18B20 temperature probes connected for commissioning
 
@@ -62,7 +62,7 @@ The Raspberry Pi should be connected to the same local network as the computer u
 
 The installation procedure assumes that the Pi can be reached as `hydro-monitor.local`.
 
-Avahi/mDNS support is installed by the Version 9.1.2 installer.
+Avahi/mDNS support is installed by the Hydroponics Monitor installer.
 
 Internet access is useful during installation because the installer downloads required Raspberry Pi OS and Python packages.
 
@@ -77,7 +77,9 @@ Internet access is required only if optional Pushover notifications are enabled.
 
 ### Installation Package
 
-Have the complete Version 9.1.2 release ZIP available on the computer from which the installation will be performed:
+Download the **latest Hydroponics Monitor release** and have the complete release ZIP available on the computer from which the installation will be performed.
+
+For example, the current release at the time this documentation was prepared is:
 
 `Hydro_Monitor_v9_1_2.zip`
 
