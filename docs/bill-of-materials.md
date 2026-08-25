@@ -13,6 +13,7 @@ This bill of materials reflects the current prototype build and may change befor
 | 1 | Single-board computer | Raspberry Pi 3 Model B | Core Electronics | Main controller |
 | 1 | Power supply | Official Raspberry Pi 12.5W Micro USB Power Supply | Core Electronics | 5.1 V, 2.5 A supply for the Raspberry Pi 3 Model B |
 | 1 | High-endurance microSD card | SanDisk 64GB High Endurance microSDXC Card, XC5520 | Jaycar Electronics | System storage; high-endurance card selected for the repeated writes associated with continuous monitoring, logging and historical data |
+| 1 | Extra-long GPIO header | GPIO Header for Raspberry Pi B+ (Extra-long 2x20 Female Header) | Core Electronics | Passes through the Makerverse Protoboard and leaves the GPIO pins accessible above the board for the RTC module |
 | 1 | Prototyping board | Makerverse Protoboard for Raspberry Pi | Core Electronics | Permanent soldered controller board; mounts directly on the Raspberry Pi GPIO header |
 | 1 | Real-time clock | DS3231 RTC module, XC9044 | Jaycar Electronics | Battery-backed clock; uses GPIO2/GPIO3 for I²C |
 
