@@ -128,6 +128,64 @@ sudo systemctl disable --now hydro-monitor.service hydro-dashboard.service
 
 Do not enable the services yet.
 
+## Hardware Self-Test
+
+With the Hydroponics Monitor and dashboard services still stopped, run the supplied hardware self-test:
+
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
+
+The self-test briefly operates the outputs in this order:
+
+1. amber alarm-inhibit LED
+2. red alarm LED
+3. green status LED
+4. buzzer
+
+Each output is activated for approximately half a second.
+
+Watch and listen during the test and confirm that all three LEDs illuminate individually and that the buzzer sounds.
+
+The test then reports the current state or reading for:
+
+- SEN0368 return-water sensor
+- reservoir low-level float switch
+- alarm-inhibit switch
+- reservoir DS18B20 temperature probe
+- grow-pipe DS18B20 temperature probe
+- DHT22 ambient temperature and relative humidity
+- Raspberry Pi CPU temperature
+
+Check that the reported input interpretations make sense for the physical state of the system.
+
+For example:
+
+- with water detected at the SEN0368, the return sensor should be interpreted as wet
+- with the reservoir float in its normal-water position, the reservoir level should be interpreted as acceptable
+- with the alarm-inhibit switch in its normal position, the override/inhibit input should report inactive
+
+### Self-Test Result
+
+The automated pass/fail result specifically requires valid readings from both assigned DS18B20 temperature probes.
+
+A successful test finishes with:
+
+```text
+SELF-TEST RESULT: REQUIRED TEMPERATURE PROBES PASSED.
+```
+
+The program then reminds the installer to confirm the LEDs, buzzer and input interpretations manually.
+
+If either required DS18B20 probe fails to produce a valid reading after three attempts, the self-test fails and the services must not be enabled.
+
+A successful automated result does **not** by itself prove that every sensor, switch or alarm output is wired correctly. The reported states and physical outputs must also be checked manually before commissioning continues.
+
+Do not enable the Hydroponics Monitor services yet.
+
 ## Sensor Tests
 
 ### Nutrient-Solution Temperature Sensor
