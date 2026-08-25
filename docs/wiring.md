@@ -285,7 +285,74 @@ The Raspberry Pi must be powered down before fitting or removing the Makerverse 
 
 ## Terminal Blocks
 
-Terminal-block assignments will be documented after the prototype board layout has been finalised.
+The permanent v9.1.2 controller uses six side-entry screw terminal blocks on the Makerverse Protoboard for Raspberry Pi.
+
+The final allocation is:
+
+| Terminal Block | Size | Function | Connections |
+|---|---:|---|---|
+| TB1 | 4-way | Alarm-inhibit switch and reservoir float switch | GPIO18, GND, GPIO17, GND |
+| TB2 | 3-way | DHT22 ambient sensor | 3.3 V, GPIO22 DATA, GND |
+| TB3 | 3-way | SEN0368 return-water sensor | 5 V, GND, IO2 to Q1 interface |
+| TB4 | 3-way | Reservoir DS18B20 | 3.3 V, shared GPIO4 DATA, GND |
+| TB5 | 3-way | Grow-pipe DS18B20 | 3.3 V, shared GPIO4 DATA, GND |
+| TB6 | 6-way | Red, amber and green enclosure LEDs | Individual anode feeds and GND returns for each LED |
+
+### TB1 — Alarm-Inhibit Switch and Reservoir Float
+
+| Terminal | Connection |
+|---:|---|
+| 1 | Alarm-inhibit input / GPIO18 |
+| 2 | GND |
+| 3 | Reservoir float input / GPIO17 |
+| 4 | GND |
+
+### TB2 — DHT22
+
+| Terminal | Connection |
+|---:|---|
+| 1 | 3.3 V |
+| 2 | DATA / GPIO22 |
+| 3 | GND |
+
+### TB3 — SEN0368
+
+| Terminal | Connection |
+|---:|---|
+| 1 | 5 V / VIN |
+| 2 | GND |
+| 3 | IO2 signal to Q1 interface |
+
+### TB4 — Reservoir DS18B20
+
+| Terminal | Connection |
+|---:|---|
+| 1 | 3.3 V |
+| 2 | DATA / shared GPIO4 1-Wire bus |
+| 3 | GND |
+
+### TB5 — Grow-Pipe DS18B20
+
+| Terminal | Connection |
+|---:|---|
+| 1 | 3.3 V |
+| 2 | DATA / shared GPIO4 1-Wire bus |
+| 3 | GND |
+
+### TB6 — Enclosure LEDs
+
+| Terminal | Connection |
+|---:|---|
+| 1 | Red LED anode feed from GPIO26 through 330 Ω |
+| 2 | Red LED cathode / GND |
+| 3 | Amber LED anode feed from GPIO20 through 330 Ω |
+| 4 | Amber LED cathode / GND |
+| 5 | Green LED anode feed from GPIO21 through 330 Ω |
+| 6 | Green LED cathode / GND |
+
+The active buzzer is mounted directly on the Makerverse Protoboard and therefore does not require a terminal-block connection.
+
+All terminal blocks are 0.1-inch / 2.54 mm pitch side-entry screw terminals.
 
 ## Prototype Board Layout
 
