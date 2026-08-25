@@ -413,4 +413,6 @@ Continue with [Commissioning](commissioning.md).
 
 ## Updating an Existing Installation
 
-A tested update procedure will be added once the software release process has been finalised.
+The update procedure will be documented once the first upgrade between published releases has been tested.
+
+Until then, follow the instructions provided with the relevant release rather than assuming that a fresh-install procedure is suitable for updating an existing system.
