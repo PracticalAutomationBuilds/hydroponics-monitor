@@ -403,7 +403,25 @@ The verified hardware drawing, rather than an earlier working layout, will be tr
 
 ## Wiring Diagram
 
-A complete wiring diagram will be included here before the first stable release.
+A final schematic-style wiring diagram will be added to the `hardware/` directory after the permanent controller board has been assembled and verified.
+
+The diagram will show:
+
+- Raspberry Pi GPIO assignments
+- 3.3 V, 5 V and GND distribution
+- both DS18B20 probes on the shared GPIO4 1-Wire bus
+- DHT22 connection
+- SEN0368 adaptor and Q1 interface
+- reservoir float-switch fail-safe circuit
+- alarm-inhibit switch
+- red, amber and green LED circuits
+- Q2 buzzer-driver circuit
+- DS3231 RTC connection
+- terminal-block assignments
+
+Until that diagram is added, the tables and circuit descriptions in this document are the authoritative wiring reference for Version 9.1.2.
+
+Any future wiring diagram added to the repository must be checked against the verified physical build before it is treated as authoritative.
 
 ## Safety and Construction Notes
 
