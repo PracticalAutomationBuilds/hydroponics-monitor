@@ -22,7 +22,7 @@ The established Raspberry Pi identity for this project is:
 | Installation directory | `/opt/hydro-monitor` |
 | Dashboard address | `http://hydro-monitor.local:8080/` |
 
-The Version 9.1.2 installer checks the username and hostname before making system changes.
+The Hydroponics Monitor installer checks the username and hostname before making system changes.
 
 The monitor and dashboard services are deliberately left stopped and disabled during installation. They are enabled only after the two DS18B20 probes have been assigned and the hardware self-test has passed.
 
@@ -45,9 +45,9 @@ The remaining sensors and alarm outputs should also be connected before the fina
 
 ### Raspberry Pi Setup
 
-The Raspberry Pi should already have Raspberry Pi OS installed and be able to boot normally.
+Instructions for preparing the Raspberry Pi and installing Raspberry Pi OS are shown below.
 
-Configure the Raspberry Pi with the established project identity:
+Be sure to configure the Raspberry Pi with the established project identity:
 
 | Setting | Value |
 |---|---|
@@ -87,14 +87,95 @@ Do not copy individual files from the release package or omit supporting files. 
 
 ## Prepare the Raspberry Pi
 
-This section will document:
+This procedure assumes a fresh or otherwise suitable Raspberry Pi OS installation.
 
-* Raspberry Pi OS installation
-* first boot
-* hostname and network configuration
-* system updates
-* enabling any required interfaces
-* timezone and locale settings
+### Install Raspberry Pi OS
+
+Use Raspberry Pi Imager to install a current Raspberry Pi OS release suitable for the Raspberry Pi 3 Model B.
+
+A graphical desktop is not required by the Hydroponics Monitor; the software is installed and administered from the command line.
+
+When preparing the microSD card, configure:
+
+| Setting | Value |
+|---|---|
+| Hostname | `hydro-monitor` |
+| Username | `hydroponics` |
+| Network | Connect to the intended local network |
+| SSH | Enabled |
+| Timezone | Correct timezone for the installation location |
+| Locale | Appropriate local locale |
+
+Choose a secure password for the `hydroponics` account. The password is installation-specific and must not be committed to the repository.
+
+### First Boot
+
+Insert the prepared microSD card, connect the Raspberry Pi to the local network and apply power.
+
+Allow the Raspberry Pi to complete its first boot before attempting to connect.
+
+From another computer on the same network, connect by SSH:
+
+```powershell
+ssh hydroponics@hydro-monitor.local
+```
+
+On first connection, SSH may ask whether the host key should be trusted. Confirm the connection after verifying that you are connecting to the intended Raspberry Pi.
+
+### Confirm the Raspberry Pi Identity
+
+After logging in, check the username:
+
+```bash
+whoami
+```
+
+The result should be:
+
+```text
+hydroponics
+```
+
+Check the hostname:
+
+```bash
+hostname
+```
+
+The result should be:
+
+```text
+hydro-monitor
+```
+
+Both values must match before running the Hydroponics Monitor installer.
+
+### Update Raspberry Pi OS
+
+Before installing the project software, update the Raspberry Pi OS package information and installed packages:
+
+```bash
+sudo apt update
+sudo apt full-upgrade -y
+```
+
+If the update installs a new kernel or otherwise indicates that a reboot is required, reboot:
+
+```bash
+sudo reboot
+```
+
+After the Raspberry Pi restarts, reconnect:
+
+```powershell
+ssh hydroponics@hydro-monitor.local
+```
+
+### Interfaces
+
+Do not manually configure the DS3231 RTC overlay before running the Hydroponics Monitor installer. The installer performs the required RTC/I²C configuration.
+
+The 1-Wire interface used by the two DS18B20 probes is enabled after the project software has been installed, before commissioning.
 
 ## Install Project Software
 
