@@ -392,6 +392,25 @@ Press `q` to exit the configuration display.
 
 Do not enable the continuous monitor and dashboard services yet. Complete the hardware checks and commissioning procedure first.
 
+## Ready for Commissioning
+
+At this point, the installation stage is complete.
+
+The Raspberry Pi should now have:
+
+- Raspberry Pi OS installed and updated
+- the latest Hydroponics Monitor release installed in `/opt/hydro-monitor`
+- 1-Wire enabled
+- the DS3231 RTC fitted, verified and initialised
+- both DS18B20 probes detected and assigned to their correct roles
+- the monitor and dashboard services still stopped and disabled
+
+Do not enable the services yet.
+
+The next stage is to verify the completed hardware, test the sensors, indicators and alarm outputs, and then place the system into normal operation.
+
+Continue with [Commissioning](commissioning.md).
+
 ## Updating an Existing Installation
 
 A tested update procedure will be added once the software release process has been finalised.
