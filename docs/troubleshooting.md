@@ -373,18 +373,130 @@ Reload the dashboard from another device and confirm that the connection returns
 
 Repeat the relevant [Commissioning](commissioning.md) checks before returning the controller to unattended operation.
 
-## DS18B20 Temperature Sensor Missing
+## DS18B20 Temperature Probe Problems
 
-Check:
+The reservoir and grow-pipe DS18B20 probes share the same GPIO4 1-Wire bus but are identified individually by their unique `28-...` hardware IDs.
 
-* 1-Wire support is enabled
-* sensor power, ground and data connections
-* the shared data-bus connection
-* the pull-up resistor
-* sensor identification in the configuration
-* terminal-block connections
+Both probes must be detected and correctly assigned for normal monitoring.
 
-If multiple DS18B20 sensors are fitted, confirm that the expected sensor IDs have not been accidentally swapped.
+### Check Which Probes Are Detected
+
+Run:
+
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py --list
+```
+
+Two different DS18B20 hardware IDs should be detected.
+
+You can also check the Linux 1-Wire devices directly:
+
+```bash
+ls -1 /sys/bus/w1/devices/28-* 2>/dev/null
+```
+
+### Neither Probe Is Detected
+
+If no DS18B20 probes are detected, check that 1-Wire support is enabled:
+
+```bash
+sudo raspi-config
+```
+
+Confirm that **1-Wire** is enabled, then reboot if a change was made.
+
+If 1-Wire is already enabled, power the Raspberry Pi down before checking the wiring.
+
+Both probes use:
+
+| Wire | Connection |
+|---|---|
+| Red | 3.3 V |
+| White | GPIO4 / DATA |
+| Black | GND |
+
+Also confirm that:
+
+- both probes share GPIO4
+- the 4.7 kΩ pull-up resistor is connected between GPIO4 / DATA and 3.3 V
+- TB4 and TB5 are wired according to [Wiring](wiring.md)
+- terminal-block screws are secure
+- no conductor is connected to 5 V
+- GPIO4 has not accidentally been connected to the NC position of the RTC module
+
+Do not alter DS18B20 wiring while the Raspberry Pi is powered.
+
+### Only One Probe Is Detected
+
+If only one `28-...` device appears, first check the terminal-block connection for the missing probe.
+
+Because both probes share the same bus, a fault in one probe or its wiring can also interfere with the other.
+
+If necessary, isolate the probes one at a time:
+
+1. shut the Raspberry Pi down and remove power
+2. disconnect one DS18B20 probe
+3. power the Raspberry Pi and check the remaining probe
+4. shut down and remove power again before changing connections
+5. repeat with the other probe
+
+This can distinguish an individual probe fault from a shared GPIO4 bus or pull-up problem.
+
+### Temperature Readings Are Assigned to the Wrong Locations
+
+If the reservoir and grow-pipe temperatures appear to be reversed, do not swap wiring at the terminal blocks.
+
+Identify the probes by their unique hardware IDs.
+
+Watch both readings:
+
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py --watch 30
+```
+
+Gently warm one physical probe by hand and observe which `28-...` reading rises.
+
+Record which ID belongs to:
+
+- reservoir
+- grow-pipe
+
+Then stop the continuous monitor before changing the assignments:
+
+```bash
+sudo systemctl stop hydro-monitor.service
+```
+
+Run the assignment utility:
+
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py
+```
+
+Assign the correct hardware ID to each role.
+
+Do not manually edit the IDs in `config.json` unless specifically recovering a damaged configuration.
+
+### After Correcting a Probe Problem
+
+Run the hardware self-test:
+
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
+
+Both required DS18B20 probes must produce valid readings.
+
+If the system has already been commissioned, restart the monitor afterwards:
+
+```bash
+sudo systemctl restart hydro-monitor.service
+```
+
+Then confirm that the dashboard shows the reservoir and grow-pipe temperatures in their correct locations.
 
 ## Incorrect Temperature Sensor Assignment
 
