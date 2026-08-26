@@ -1096,6 +1096,166 @@ sudo systemctl restart hydro-monitor.service
 
 Then repeat the applicable alarm and indicator checks in [Commissioning](commissioning.md).
 
+## RTC or System Time Incorrect
+
+The DS3231 RTC provides time retention when the Raspberry Pi is powered down. During normal network-connected operation, Raspberry Pi OS synchronises the system clock from network time.
+
+The RTC should therefore be treated as a backup time source rather than as a replacement for normal network time synchronisation.
+
+### Run the RTC Verification Utility
+
+Run:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh
+```
+
+A working RTC should report:
+
+- `/dev/rtc0` present
+- an RTC driver
+- the current Raspberry Pi system time
+- the current RTC time
+- the DS3231 on I2C bus 1
+
+At I2C address `0x68`, the scan may show:
+
+```text
+UU
+```
+
+This is normally expected and means the kernel RTC driver has claimed the device.
+
+### RTC Device Is Missing
+
+If the utility reports:
+
+```text
+ERROR: /dev/rtc0 is missing.
+```
+
+shut the Raspberry Pi down and remove power before checking the RTC hardware.
+
+Confirm that the DS3231 module is fitted in the documented position:
+
+| RTC Position | Raspberry Pi Physical Pin | Function |
+|---:|---:|---|
+| 1 | 1 | 3.3 V |
+| 2 | 3 | GPIO2 / SDA |
+| 3 | 5 | GPIO3 / SCL |
+| 4 | 7 | NC |
+| 5 | 9 | GND |
+
+The RTC position over physical pin 7 is not electrically connected. GPIO4 therefore remains available for the DS18B20 1-Wire bus.
+
+Also confirm that:
+
+- the RTC is fitted in the correct orientation
+- the extra-long GPIO header is correctly aligned
+- the module is fully seated
+- no pin is offset by one position
+- no bent pin or solder fault is present
+
+Do not fit, remove or reposition the RTC while the Raspberry Pi is powered.
+
+### Check the RTC Boot Configuration
+
+The installer configures I2C and the DS3231 RTC overlay automatically.
+
+If the RTC hardware is correctly fitted but `/dev/rtc0` is still missing, run:
+
+```bash
+sudo /opt/hydro-monitor/configure_rtc.sh
+```
+
+The utility checks the Raspberry Pi boot configuration, enables I2C where required and installs the DS3231 RTC overlay.
+
+It also creates a timestamped backup of the boot configuration before making changes.
+
+Reboot when instructed:
+
+```bash
+sudo reboot
+```
+
+Then reconnect and run:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh
+```
+
+Do not manually add additional RTC overlays without first checking the existing configuration. The supplied configuration utility deliberately refuses to stack a conflicting I2C RTC overlay.
+
+### System Time Is Correct but RTC Time Is Wrong
+
+First confirm that network time synchronisation is active:
+
+```bash
+timedatectl status
+```
+
+The Raspberry Pi system clock should show the correct local date and time, and network time synchronisation should be active.
+
+Once the system clock is known to be correct, initialise the RTC from it:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh --sync-from-system
+```
+
+The utility will **refuse to overwrite the RTC unless Raspberry Pi OS reports that network time is synchronised**.
+
+This prevents an incorrect system clock from being written into the RTC.
+
+### System Time Is Wrong After a Power Failure
+
+Check the RTC first:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh
+```
+
+If the RTC itself contains the correct time but the Raspberry Pi system clock is wrong, inspect the boot-time RTC configuration and system logs before rewriting the RTC.
+
+If both the RTC and system time are wrong, reconnect the Raspberry Pi to the network and allow network time synchronisation to establish the correct system clock before using:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh --sync-from-system
+```
+
+### RTC Loses Time While the Raspberry Pi Is Off
+
+If the RTC repeatedly loses its clock while the Raspberry Pi is powered down, check the RTC module's backup battery.
+
+Replace the battery if necessary using the correct type specified for the RTC module.
+
+After replacing the battery, allow the Raspberry Pi to obtain correct network time and initialise the RTC again.
+
+### fake-hwclock
+
+Some Raspberry Pi OS installations include `fake-hwclock`, which stores an approximate software clock during shutdown.
+
+The RTC verification utility reports if `fake-hwclock.service` exists.
+
+Once the physical DS3231 has been confirmed to operate correctly, it can be disabled with:
+
+```bash
+sudo systemctl disable --now fake-hwclock.service
+```
+
+Do not disable `fake-hwclock` until the DS3231 has been physically installed and verified.
+
+### After Correcting an RTC Fault
+
+Run:
+
+```bash
+sudo /opt/hydro-monitor/verify_rtc.sh
+```
+
+Confirm that both the Raspberry Pi system time and RTC time are sensible.
+
+Then repeat the restart portion of [Commissioning](commissioning.md) to verify that correct timekeeping survives a reboot.
+
 ## Remote Notification Not Received
 
 Check:
