@@ -91,15 +91,140 @@ After correcting the fault, reconnect the controller hardware and repeat the rel
 
 ## Monitoring Software Does Not Start
 
-Check:
+If the monitor service is not running, first check its current state:
 
-* project files are present
-* Python dependencies are installed
-* configuration files exist
-* required permissions are correct
-* any automatic-start service is enabled and running
+```bash
+systemctl status hydro-monitor.service
+```
 
-Relevant diagnostic commands will be added once the final installation method is established.
+Press `q` to exit the status display.
+
+### Check Whether the Service Is Enabled
+
+```bash
+systemctl is-enabled hydro-monitor.service
+```
+
+For a commissioned system, the expected result is:
+
+```text
+enabled
+```
+
+If it is disabled after commissioning, enable and start it:
+
+```bash
+sudo systemctl enable --now hydro-monitor.service
+```
+
+### Check the Installed Version
+
+Confirm that the installed release is the expected version:
+
+```bash
+cat /opt/hydro-monitor/VERSION
+```
+
+If the VERSION file is missing or reports an unexpected release, stop and verify that the correct software package was installed.
+
+### Check Recent Monitor Logs
+
+View the most recent service messages:
+
+```bash
+journalctl -u hydro-monitor.service -n 100 --no-pager
+```
+
+For messages from the current boot only:
+
+```bash
+journalctl -u hydro-monitor.service -b --no-pager
+```
+
+Look for errors involving:
+
+- missing or invalid configuration
+- unassigned DS18B20 probe IDs
+- missing required temperature probes
+- malformed historical-data files
+- GPIO initialisation
+- missing Python packages
+- file permissions
+- unexpected shutdown or power-loss recovery
+
+### Run the Monitor Manually
+
+If the service log does not make the problem clear, first stop the service:
+
+```bash
+sudo systemctl stop hydro-monitor.service
+```
+
+Then run the monitor directly:
+
+```bash
+sudo /opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json
+```
+
+Running the program interactively can make startup errors easier to see.
+
+Stop the manual run with `Ctrl+C` when finished.
+
+Do not run the manual monitor and the systemd monitor service at the same time.
+
+### Check the Configuration
+
+Confirm that the main configuration file is valid JSON:
+
+```bash
+python3 -m json.tool /opt/hydro-monitor/config.json > /dev/null
+```
+
+No output indicates that the JSON syntax is valid.
+
+If the command reports an error, do not manually guess at repairs. Check for a timestamped configuration backup and compare it with the damaged file.
+
+### Check the Temperature-Probe Assignments
+
+List the detected DS18B20 probes:
+
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py --list
+```
+
+Both required probes should be detected.
+
+If the probes are present but their roles have not yet been assigned, run:
+
+```bash
+sudo /opt/hydro-monitor/configure_temperature_probes.py
+```
+
+The continuous monitor will not start normally until the required reservoir and grow-pipe probe roles contain valid, different hardware IDs.
+
+### Restart the Service
+
+After correcting the cause:
+
+```bash
+sudo systemctl restart hydro-monitor.service
+```
+
+Then check:
+
+```bash
+systemctl is-active hydro-monitor.service
+```
+
+The expected result is:
+
+```text
+active
+```
+
+Repeat the relevant [Commissioning](commissioning.md) checks before returning the controller to unattended operation.
 
 ## Dashboard Cannot Be Reached
 
