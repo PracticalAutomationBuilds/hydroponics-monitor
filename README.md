@@ -8,27 +8,28 @@ The project is being developed around a Raspberry Pi 3B to provide continuous mo
 
 > **Work in progress**
 >
-> The prototype hardware and software are currently being built and tested. Wiring, components and software may change before the first stable release.
+> The permanent controller hardware is currently being assembled and commissioned. The software has reached its first public release-candidate stage, while hardware verification and documentation are being completed before the first stable release.
 
 ## Monitored Conditions
 
-The system is designed to monitor:
+The system monitors:
 
-* nutrient-solution temperature
-* grow-pipe water temperature
-* ambient temperature and relative humidity
-* return water level
-* critically low reservoir water level
+- reservoir nutrient-solution temperature
+- grow-pipe airspace temperature
+- ambient temperature and relative humidity
+- return-water presence
+- critically low reservoir water level
 
 ## Outputs and Alerts
 
-Planned system functions include:
+System functions include:
 
-* browser-based dashboard
-* historical sensor information
-* visual status and warning LEDs
-* audible alarm
-* remote notifications for selected fault conditions
+- browser-based local dashboard
+- historical sensor logging
+- visual status and warning LEDs
+- audible alarm
+- maintained alarm-inhibit control
+- optional Pushover notifications for selected fault conditions
 
 ## Documentation
 
