@@ -10,11 +10,11 @@ The project is intended to provide continuous monitoring of important system con
 
 The system is designed to monitor:
 
-* nutrient-solution temperature
-* temperature within the hydroponic grow-pipe system
-* ambient temperature and relative humidity
-* water level at the system return
-* critically low reservoir water level
+- reservoir nutrient-solution temperature
+- grow-pipe airspace temperature
+- ambient temperature and relative humidity
+- return-water presence
+- critically low reservoir water level
 
 ## Alerts and Outputs
 
@@ -28,7 +28,7 @@ The completed system is designed to provide:
 
 ## Hardware Platform
 
-The project is based around a Raspberry Pi 3B and combines commercially available sensors with a custom prototyping-board assembly.
+The project is based around a Raspberry Pi 3 Model B and combines commercially available sensors with a permanent controller assembled on a Makerverse Protoboard for Raspberry Pi.
 
 The hardware has been designed so that sensors and field wiring can be disconnected using terminal blocks rather than being permanently soldered to the controller.
 
