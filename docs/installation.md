@@ -191,7 +191,7 @@ This procedure is for a **fresh installation** of the Hydroponics Monitor.
 
 Download the latest release ZIP from the project releases and transfer the complete package to the Raspberry Pi.
 
-The examples below use `Hydro_Monitor_v9_1_2.zip`. Replace that filename and the corresponding extracted directory name with those of the latest release.
+The examples below use `Hydro_Monitor_v_v1_0_0.zip`. Replace that filename and the corresponding extracted directory name with those of the latest release.
 
 ### Transfer the Release
 
@@ -200,7 +200,7 @@ On the computer containing the downloaded release ZIP, open PowerShell in that d
 Transfer the ZIP to the Raspberry Pi:
 
 ```powershell
-scp .\Hydro_Monitor_v9_1_2.zip hydroponics@hydro-monitor.local:~
+scp .\Hydro_Monitor_v_v1_0_0.zip hydroponics@hydro-monitor.local:~
 ```
 
 Then connect to the Raspberry Pi:
