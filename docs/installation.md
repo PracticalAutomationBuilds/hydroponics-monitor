@@ -87,7 +87,7 @@ Download the **latest Hydroponics Monitor release** and have the complete releas
 
 Release ZIP filenames follow this pattern. For example:
 
-`Hydro_Monitor_v1.0.0-rc.1.zip`
+`Hydro_Monitor_v1.0.0.zip`
 
 Use the filename of the latest release when following the commands below.
 
@@ -215,8 +215,8 @@ On the Raspberry Pi:
 
 ```bash
 cd ~
-unzip Hydro_Monitor_v1.0.0-rc.1.zip
-cd Hydro_Monitor_v1.0.0-rc.1
+unzip Hydro_Monitor_v1.0.0.zip
+cd Hydro_Monitor_v1.0.0
 ```
 
 Use Tab completion where useful to avoid mistyping the release filename or directory name.
