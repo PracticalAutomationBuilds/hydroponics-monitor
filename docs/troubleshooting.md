@@ -727,15 +727,112 @@ Confirm that the dashboard correctly follows the physical return-water condition
 
 ## Low Reservoir Alarm Does Not Operate
 
-Check:
+The reservoir float switch is connected to GPIO17 and uses a deliberately **fail-safe** arrangement.
 
-* float-switch wiring
-* mechanical movement of the float
-* GPIO assignment
-* expected normal-open or normal-closed behaviour
-* software alarm logic
+The expected logic is:
 
-Manually operate the float switch while watching the dashboard or diagnostic output.
+| Physical / Electrical Condition | GPIO17 Raw Value | Interpretation |
+|---|---:|---|
+| Acceptable water level, switch closed to GND | `0` | Reservoir level acceptable |
+| Low water, switch open | `1` | Low reservoir |
+| Broken or disconnected float circuit | `1` | Low reservoir |
+
+A disconnected wire is therefore treated as a fault rather than as a safe condition.
+
+### Check the Current Input State
+
+Stop the continuous monitor before running the hardware self-test:
+
+```bash
+sudo systemctl stop hydro-monitor.service
+```
+
+Then run:
+
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
+
+With the float in its normal-water position, the result should include:
+
+```text
+Low-level input electrical value: 0
+Reservoir level interpreted as acceptable: True
+```
+
+With the float in the low-water position:
+
+```text
+Low-level input electrical value: 1
+Reservoir level interpreted as acceptable: False
+```
+
+### Check Float Orientation
+
+The float must be installed so that its contact is **closed at an acceptable reservoir level** and opens when the water level falls.
+
+If the logic is reversed, first check the physical orientation of the float rather than changing the software.
+
+The Jaycar Electronics SF0920 float can be mechanically reoriented by reversing the float body on its stem if necessary.
+
+### Check TB1 Wiring
+
+The reservoir float uses TB1 terminals 3 and 4:
+
+| TB1 Terminal | Connection |
+|---:|---|
+| 3 | GPIO17 |
+| 4 | GND |
+
+Confirm that:
+
+- the float switch is connected between GPIO17 and GND
+- the external 10 kΩ pull-up resistor connects GPIO17 to 3.3 V
+- terminal-block screws are secure
+- no conductor is loose or broken
+- GPIO17 is not shorted permanently to ground
+
+Power the Raspberry Pi down before changing any wiring.
+
+### Test the Fail-Safe Behaviour
+
+With power removed, disconnect one float-switch conductor.
+
+Restore power and run the hardware self-test again.
+
+The reservoir should now be interpreted as **low**, because the open circuit allows the 10 kΩ pull-up resistor to pull GPIO17 HIGH.
+
+If a disconnected float circuit is interpreted as acceptable, stop troubleshooting and re-check the wiring against [Wiring](wiring.md).
+
+### Alarm Does Not Appear Immediately
+
+The software applies a confirmation delay before declaring the low-reservoir alarm.
+
+If the raw input changes correctly but the alarm is not immediately active, allow the configured confirmation period to expire before judging the result.
+
+Do not shorten or bypass the confirmation period merely to compensate for a wiring fault.
+
+### After Correcting the Fault
+
+Repeat the hardware self-test with the float in both positions.
+
+If the system has already been commissioned, restart the monitor:
+
+```bash
+sudo systemctl restart hydro-monitor.service
+```
+
+Then confirm that:
+
+- the dashboard follows the physical float position
+- the low-reservoir alarm appears after the expected confirmation period
+- the red LED and buzzer operate correctly
+- the alarm clears after restoring the float to the normal-water position
+
+Repeat the applicable alarm test from [Commissioning](commissioning.md).
 
 ## LED Does Not Illuminate
 
