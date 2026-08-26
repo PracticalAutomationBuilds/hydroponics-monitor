@@ -1598,13 +1598,38 @@ Then repeat the restart and power-loss checks in [Commissioning](commissioning.m
 
 ## After a Wiring Change
 
-After any wiring repair or modification:
+Any wiring repair or modification should be treated as a change to a previously verified system.
 
-* inspect the modified area
-* check for solder bridges
-* confirm polarity
-* verify continuity where appropriate
-* repeat the relevant commissioning tests before returning the system to unattended operation
+Before applying power again:
+
+- inspect the modified area closely
+- check for solder bridges and loose wire strands
+- confirm component and connector polarity
+- verify terminal-block assignments
+- confirm transistor orientation where Q1 or Q2 has been disturbed
+- check continuity of any new or repaired links
+- check for unintended shorts between 3.3 V, 5 V and GND
+- confirm adequate clearance from the Raspberry Pi and any fitted heatsink
+
+Do not rely solely on a visual inspection where a continuity or resistance check can verify the connection.
+
+### Repeat the Relevant Tests
+
+After power is restored, repeat every commissioning test affected by the change.
+
+For example:
+
+- changes to a DS18B20 connection require probe detection and temperature verification
+- changes to the SEN0368 or Q1 circuit require wet/dry input testing
+- changes to the float-switch circuit require normal, low-water and fail-safe testing
+- changes to the alarm-inhibit circuit require both switch states to be verified
+- changes to an LED or buzzer circuit require the hardware self-test and applicable alarm test
+- changes to the RTC or GPIO header require RTC verification
+- changes affecting shared power or ground should be followed by a broader hardware self-test
+
+If the change affects several circuits, the GPIO header, power distribution, protoboard layout or software configuration, repeat the complete [Commissioning](commissioning.md) procedure rather than attempting to identify a minimal subset of tests.
+
+Do not return the controller to unattended operation until the affected tests have passed.
 
 ## Known Issues
 
