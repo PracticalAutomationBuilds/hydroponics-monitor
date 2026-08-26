@@ -960,27 +960,141 @@ Confirm that:
 
 Return the switch to **alarms enabled** after testing and repeat the applicable section of [Commissioning](commissioning.md).
 
-## LED Does Not Illuminate
+## Indicator or Buzzer Does Not Operate
 
-Check:
+The hardware self-test operates each alarm output independently, making it the best first check when an LED or the buzzer does not behave as expected.
 
-* LED polarity
-* current-limiting resistor
-* GPIO assignment
-* ground connection
-* solder joints
-* software output state
+Stop the continuous monitor before running the self-test:
 
-## Buzzer Does Not Operate
+```bash
+sudo systemctl stop hydro-monitor.service
+```
 
-Check:
+Then run:
 
-* buzzer polarity
-* supply voltage
-* transistor/interface wiring
-* GPIO control signal
-* associated resistor connections
-* ground continuity
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
+
+The self-test briefly operates:
+
+1. amber LED
+2. red LED
+3. green LED
+4. buzzer
+
+Observe each output and note which one fails.
+
+### LED Does Not Illuminate
+
+The three panel-mounted LEDs are connected through TB6:
+
+| TB6 Terminal | Connection |
+|---:|---|
+| 1 | Red LED anode from GPIO26 through 330 Ω |
+| 2 | Red LED cathode / GND |
+| 3 | Amber LED anode from GPIO20 through 330 Ω |
+| 4 | Amber LED cathode / GND |
+| 5 | Green LED anode from GPIO21 through 330 Ω |
+| 6 | Green LED cathode / GND |
+
+Each LED circuit is:
+
+```text
+GPIO ── 330 Ω ── LED anode (+)
+                    LED cathode (−) ── GND
+```
+
+If one LED fails while the others work, power the Raspberry Pi down and check:
+
+- LED polarity
+- the 330 Ω series resistor
+- the corresponding GPIO connection
+- the LED ground connection
+- TB6 terminal connections
+- solder joints
+- the panel wiring between TB6 and the LED
+
+For a conventional through-hole LED, the longer lead is normally the anode and the shorter lead is normally the cathode. The flat edge of the LED body normally identifies the cathode.
+
+Verify the actual component before relying solely on lead length.
+
+### All LEDs Fail
+
+If none of the LEDs operate during the hardware self-test, check the shared ground connections and protoboard wiring before assuming that three LEDs have failed independently.
+
+Also confirm that the self-test itself is running without GPIO initialisation errors.
+
+### Buzzer Does Not Sound
+
+The 5 V active buzzer is switched by Q2, a BC337 NPN transistor.
+
+The project wiring assumes the documented **C-B-E** transistor lead arrangement.
+
+The buzzer circuit is:
+
+```text
+GPIO12 ── 1 kΩ ── Base Q2
+                   │
+                  10 kΩ
+                   │
+                  GND
+
+Q2 Emitter ─────── GND
+
+Q2 Collector ───── Buzzer negative
+                    Buzzer positive ── 5 V
+```
+
+Power the Raspberry Pi down before changing any wiring.
+
+Confirm that:
+
+- the buzzer positive terminal is connected to 5 V
+- the buzzer negative terminal is connected to Q2 collector
+- Q2 emitter is connected to GND
+- GPIO12 reaches Q2 base through the 1 kΩ resistor
+- the 10 kΩ base-to-ground resistor is fitted
+- Q2 is installed in the documented C-B-E orientation
+- the buzzer polarity is correct
+- solder joints are sound
+
+The 10 kΩ base-to-ground resistor keeps Q2 off while the Raspberry Pi is booting or GPIO12 is otherwise not being actively driven.
+
+### Output Works in Self-Test but Not During an Alarm
+
+If an LED or buzzer works during the hardware self-test but does not operate during normal monitoring, the physical output circuit is probably functional.
+
+Check instead:
+
+- whether the expected alarm is actually active
+- whether the alarm-inhibit switch is active
+- whether the alarm confirmation or startup grace period has elapsed
+- whether the dashboard reports the same alarm state
+- recent monitor service messages
+
+Check the monitor log:
+
+```bash
+journalctl -u hydro-monitor.service -n 100 --no-pager
+```
+
+Do not alter GPIO assignments merely because an expected alarm output did not activate. First determine whether the software actually declared the relevant alarm condition.
+
+### After Correcting the Fault
+
+Repeat the hardware self-test and confirm that all three LEDs and the buzzer operate individually.
+
+If the system has already been commissioned, restart the monitor:
+
+```bash
+sudo systemctl restart hydro-monitor.service
+```
+
+Then repeat the applicable alarm and indicator checks in [Commissioning](commissioning.md).
 
 ## Remote Notification Not Received
 
