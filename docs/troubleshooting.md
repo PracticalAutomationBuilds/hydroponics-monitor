@@ -27,14 +27,67 @@ When requesting troubleshooting assistance, do not publish Pushover credentials,
 
 ## Raspberry Pi Does Not Boot
 
-Check:
+If the Raspberry Pi does not appear to boot, first disconnect its power supply before inspecting or changing any hardware.
 
-* power supply and cable
-* microSD card installation
-* Raspberry Pi status LEDs
-* attached hardware for possible shorts or incorrect connections
+### Check the Basics
 
-Disconnect external hardware if necessary and confirm that the Raspberry Pi can boot independently.
+Confirm that:
+
+- the Micro USB power supply is connected securely
+- the microSD card is fully inserted
+- the power supply is suitable for the Raspberry Pi 3 Model B
+- no loose wire, component lead or solder joint is shorting against another connection
+- the Makerverse Protoboard and GPIO header are correctly aligned
+- the DS3231 RTC, if fitted, is positioned on the correct GPIO pins
+
+Do not remove or refit GPIO-connected hardware while the Raspberry Pi is powered.
+
+### Observe the Raspberry Pi LEDs
+
+On the Raspberry Pi itself:
+
+- the red **PWR** LED should indicate that power is present
+- the green **ACT** LED should normally show activity while the microSD card is being accessed during boot
+
+No power indication suggests a power-supply or power-connection problem.
+
+Power indication with no apparent boot activity may indicate a microSD card, Raspberry Pi OS or attached-hardware problem.
+
+### Isolate the Controller Hardware
+
+If the cause is not obvious, power the Raspberry Pi off and temporarily disconnect the Hydroponics Monitor hardware.
+
+Where practical, test the Raspberry Pi with only:
+
+- the microSD card
+- the Raspberry Pi power supply
+- the required network connection
+
+Then apply power again.
+
+If the Raspberry Pi boots normally with the controller hardware removed, the fault is likely associated with the GPIO-connected hardware, protoboard or external wiring.
+
+Reconnect hardware progressively, with power removed between changes, until the fault is identified.
+
+Pay particular attention to:
+
+- shorts between 3.3 V and ground
+- shorts between 5 V and ground
+- shorts between 3.3 V and 5 V
+- incorrect GPIO-header alignment
+- misplaced RTC connection
+- underside protoboard links or solder joints
+- clearance against any large aftermarket Raspberry Pi heatsink
+
+### If the Raspberry Pi Still Does Not Boot
+
+If the Raspberry Pi will not boot with the Hydroponics Monitor hardware disconnected, investigate the Raspberry Pi, power supply and microSD card independently of this project.
+
+Do not immediately re-image the existing microSD card if the controller has already been commissioned and contains historical readings or configuration that should be preserved.
+
+If possible, preserve or copy the existing card before undertaking destructive recovery steps such as re-imaging it.
+
+After correcting the fault, reconnect the controller hardware and repeat the relevant [Commissioning](commissioning.md) checks before returning the system to unattended operation.
 
 ## Monitoring Software Does Not Start
 
