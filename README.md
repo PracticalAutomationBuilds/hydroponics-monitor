@@ -10,6 +10,26 @@ The project is being developed around a Raspberry Pi 3B to provide continuous mo
 >
 > The permanent controller hardware is currently being assembled and commissioned. The software has reached its first public release-candidate stage, while hardware verification and documentation are being completed before the first stable release.
 
+## Releases and Downloads
+
+Installable packages are published through the project's [GitHub Releases](https://github.com/PracticalAutomationBuilds/hydroponics-monitor/releases) page.
+
+Use the **latest release or pre-release package** rather than downloading individual files from the repository.
+
+Each packaged release includes:
+
+- the complete installation package
+- release notes
+- a SHA-256 checksum for integrity verification
+
+The current public release candidate is:
+
+**v1.0.0-rc.1**
+
+Stable release **v1.0.0** will follow once permanent-hardware commissioning has been completed successfully.
+
+For installation instructions, see [Installation](docs/installation.md).
+
 ## Monitored Conditions
 
 The system monitors:
