@@ -4,19 +4,26 @@
 
 **Work in progress.**
 
-This guide will be expanded as the prototype system is assembled, commissioned and operated.
+This guide documents troubleshooting procedures for the Hydroponics Monitor and will be expanded as additional faults and real-world operating experience are encountered.
+
+Where a fault is corrected, repeat the relevant checks in [Commissioning](commissioning.md) before returning the controller to unattended operation.
 
 ## General Approach
 
 When troubleshooting the Hydroponics Monitor:
 
-1. identify the failed function
-2. check the dashboard or log output for relevant errors
-3. confirm the affected hardware connection
-4. verify power and ground
-5. test the individual sensor or output where practical
-6. make only one change at a time
-7. repeat the relevant commissioning test after correcting the fault
+1. identify the failed function or incorrect reading
+2. check the dashboard for the current system state
+3. check the relevant service logs for errors
+4. confirm the affected hardware connection against [Wiring](wiring.md)
+5. verify the relevant power, ground and signal connections
+6. test the individual sensor, input or output where practical
+7. make only one change at a time
+8. repeat the relevant commissioning test after correcting the fault
+
+Avoid changing software settings simply to make an unexpected electrical state appear correct. Where a sensor or input reports reversed or implausible logic, confirm the physical wiring and documented interface circuit first.
+
+When requesting troubleshooting assistance, do not publish Pushover credentials, passwords or other private configuration values.
 
 ## Raspberry Pi Does Not Boot
 
