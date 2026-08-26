@@ -1408,6 +1408,194 @@ sudo /opt/hydro-monitor/configure_pushover.py --test-only
 
 Then repeat one supervised real-alarm notification test before returning the controller to unattended operation.
 
+## Historical Data or Power-Loss Recovery Problems
+
+The Hydroponics Monitor is designed to recover automatically from the most likely application-data problem caused by an unexpected loss of power.
+
+Historical readings are stored in:
+
+`/var/log/hydro-monitor/readings.csv`
+
+The current live dashboard state is stored in:
+
+`/var/lib/hydro-monitor/current_status.json`
+
+The readings file is written once per logging interval and each completed record is explicitly flushed and synchronised to storage.
+
+Even with these protections, an unexpected power interruption can occur during a write.
+
+### Check the Monitor After an Unexpected Shutdown
+
+After power is restored, first confirm that the monitor service is running:
+
+```bash
+systemctl is-active hydro-monitor.service
+```
+
+The expected result is:
+
+```text
+active
+```
+
+Then inspect messages from the current boot:
+
+```bash
+journalctl -u hydro-monitor.service -b --no-pager
+```
+
+Look particularly for messages containing:
+
+- `Recovered interrupted final readings CSV record after power loss`
+- `Discarded invalid current-status JSON after unclean shutdown`
+- `Persistent-data integrity check failed`
+
+### Interrupted Final History Record
+
+At startup, the monitor checks the `readings.csv` header and final physical record.
+
+It does **not** scan or rewrite the complete historical file.
+
+If the final record appears to have been interrupted by loss of power, the monitor automatically:
+
+1. creates a timestamped backup of the original file
+2. removes only the damaged final record
+3. preserves all earlier historical records
+4. logs the recovery
+5. continues normal monitoring
+
+The recovery backup is stored alongside the normal history file with a name similar to:
+
+`readings.powerloss-recovery-YYYYMMDD-HHMMSS-ffffff.csv`
+
+List any recovery copies with:
+
+```bash
+ls -lh /var/log/hydro-monitor/readings.powerloss-recovery-*.csv 2>/dev/null
+```
+
+A recovery file is created only when the monitor actually detects and repairs an interrupted final record.
+
+An unexpected shutdown therefore does **not** necessarily create one.
+
+### Live Status File Was Damaged
+
+`current_status.json` contains disposable live dashboard state rather than historical records.
+
+If an unclean shutdown leaves this file malformed, the monitor automatically deletes it and logs:
+
+```text
+Discarded invalid current-status JSON after unclean shutdown
+```
+
+A new valid status file is then generated from current sensor data.
+
+No manual restoration of `current_status.json` should normally be required.
+
+### Historical CSV Header Is Invalid
+
+The monitor deliberately does **not** guess how to repair an invalid or unrecognised `readings.csv` header.
+
+If the header is damaged, startup will stop with a message similar to:
+
+```text
+Persistent-data integrity check failed: ...
+```
+
+This is intentional. Automatically rewriting an unknown history structure could destroy or misinterpret otherwise recoverable data.
+
+Do not delete or manually edit the history file as the first troubleshooting step.
+
+Preserve it first:
+
+```bash
+sudo cp /var/log/hydro-monitor/readings.csv \
+  ~/readings-recovery-copy.csv
+```
+
+Then make the copy accessible to the normal user:
+
+```bash
+sudo chown hydroponics:hydroponics ~/readings-recovery-copy.csv
+```
+
+Investigate the damaged file and any available recovery or backup copies before deciding how to restore the history.
+
+### Check the CSV Header
+
+Display only the first line:
+
+```bash
+head -n 1 /var/log/hydro-monitor/readings.csv
+```
+
+If the header has been altered, truncated or replaced with unrelated data, stop the monitor while investigating:
+
+```bash
+sudo systemctl stop hydro-monitor.service
+```
+
+Do not fabricate a replacement header unless the expected schema for the installed software version has been verified.
+
+### Check the End of the History File
+
+To inspect the most recent records:
+
+```bash
+tail -n 10 /var/log/hydro-monitor/readings.csv
+```
+
+A previously interrupted final record should no longer remain in the active file after successful automatic recovery.
+
+The timestamped recovery copy retains the original pre-repair file for investigation.
+
+### Monitor Does Not Start After Power Loss
+
+If the service remains stopped:
+
+```bash
+systemctl status hydro-monitor.service
+```
+
+Then inspect:
+
+```bash
+journalctl -u hydro-monitor.service -b --no-pager
+```
+
+If the log reports a persistent-data integrity failure, preserve the affected files before attempting repairs.
+
+Do not repeatedly restart the service while manually changing historical files.
+
+### Filesystem or microSD Card Problems
+
+The Hydroponics Monitor's recovery logic protects its own application files. It is **not** a substitute for Linux filesystem recovery or protection against a failing microSD card.
+
+Repeated symptoms such as:
+
+- filesystem errors
+- files unexpectedly becoming read-only
+- unrelated files becoming corrupt
+- repeated boot failures
+- I/O errors in system logs
+
+may indicate a wider storage problem rather than an interrupted Hydroponics Monitor write.
+
+In that situation, preserve important configuration and historical data as soon as practical and investigate the microSD card and Raspberry Pi filesystem separately.
+
+### After Recovery
+
+Once the monitor is running again, confirm that:
+
+- the dashboard returns to **Live**
+- new historical records are being added
+- earlier history remains available
+- both DS18B20 roles remain assigned correctly
+- configuration has been preserved
+- no unexpected alarm remains active
+
+Then repeat the restart and power-loss checks in [Commissioning](commissioning.md) before returning the controller to unattended operation.
+
 ## After a Wiring Change
 
 After any wiring repair or modification:
