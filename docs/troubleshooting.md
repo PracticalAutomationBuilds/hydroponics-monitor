@@ -1633,4 +1633,33 @@ Do not return the controller to unattended operation until the affected tests ha
 
 ## Known Issues
 
-Confirmed software or hardware issues will be listed here as they are identified.
+No confirmed hardware or software defects are currently listed.
+
+This does not mean that every possible operating condition has been tested. The project remains subject to real-world commissioning and continued operating experience.
+
+A behaviour should be treated as a confirmed issue only after it has been reproduced and distinguished from:
+
+- incorrect wiring
+- incorrect sensor installation
+- configuration errors
+- damaged or substituted components
+- network or Internet problems
+- normal alarm confirmation or grace timing
+- Raspberry Pi OS or storage faults outside the Hydroponics Monitor software
+
+Confirmed issues will be documented here together with any known workaround and the software version in which the issue was corrected.
+
+When reporting a suspected issue, useful information includes:
+
+- installed software version
+- relevant dashboard state
+- steps required to reproduce the behaviour
+- relevant service-log messages
+- whether the hardware self-test passes
+- whether the problem persists after a controlled restart
+
+The installed software version can be checked with:
+
+`cat /opt/hydro-monitor/VERSION`
+
+Do not include passwords, Pushover credentials or other private information in a public issue report.
