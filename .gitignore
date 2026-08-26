@@ -216,3 +216,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Hydroponics Monitor project-specific files
+
+# Private credentials
+**/pushover_secrets.json
+
+# Runtime state and monitoring data
+**/current_status.json
+**/readings.csv
+**/readings.powerloss-recovery-*.csv
+**/events.log
+
+# Local recovery and configuration backups
+**/config-before-*.json
+**/config.json.backup-*
+**/config.json.bak*
+
+# Generated release packages and metadata
+Hydro_Monitor_*.zip
+SHA256SUMS
+MANIFEST.txt
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
