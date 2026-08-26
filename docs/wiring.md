@@ -311,7 +311,7 @@ The Raspberry Pi must be powered down before fitting or removing the Makerverse 
 
 ## Terminal Blocks
 
-The permanent v9.1.2 controller uses six side-entry screw terminal blocks on the Makerverse Protoboard for Raspberry Pi.
+The permanent controller uses six side-entry screw terminal blocks on the Makerverse Protoboard for Raspberry Pi.
 
 The final allocation is:
 
@@ -423,7 +423,7 @@ The DS3231 RTC module is fitted above the protoboard on these exposed pins, so c
 
 ### Final Pad-by-Pad Layout
 
-The exact pad-by-pad component-placement diagram and underside-link map will be added to the `hardware/` directory after the permanent controller has been assembled, continuity-tested and confirmed against the Version 9.1.2 wiring.
+The exact pad-by-pad component-placement diagram and underside-link map will be added to the `hardware/` directory after the permanent controller has been assembled, continuity-tested and confirmed against the current wiring documentation.
 
 The verified hardware drawing, rather than an earlier working layout, will be treated as the authoritative physical-board reference.
 
@@ -445,7 +445,7 @@ The diagram will show:
 - DS3231 RTC connection
 - terminal-block assignments
 
-Until that diagram is added, the tables and circuit descriptions in this document are the authoritative wiring reference for Version 9.1.2.
+Until that diagram is added, the tables and circuit descriptions in this document are the authoritative wiring reference for current release.
 
 Any future wiring diagram added to the repository must be checked against the verified physical build before it is treated as authoritative.
 
