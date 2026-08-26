@@ -21,7 +21,7 @@ The process includes:
 - enabling and starting the monitor and dashboard services
 - checking the local dashboard
 - testing optional remote notifications, where configured
-- confirming that the system recovers correctly after a reboot
+- confirming that the system recovers correctly after a reboot or unexpected loss of power
 
 The system should not be relied upon for unattended monitoring until the applicable commissioning checks have passed.
 
@@ -619,9 +619,11 @@ Restore Internet access after the test.
 
 Pushover is an additional remote warning path and should not be treated as a replacement for the local alarm system.
 
-## Restart Test
+## Restart and Power-Loss Recovery Test
 
-After all applicable commissioning tests have passed, perform a final controlled reboot.
+After all applicable commissioning tests have passed, verify that the controller recovers correctly after both a normal reboot and an unexpected loss of power.
+
+### Controlled Reboot
 
 Before rebooting, confirm that:
 
@@ -722,6 +724,70 @@ Confirm that:
 If Pushover is configured, confirm that the dashboard again reports phone notifications as ready.
 
 The system should recover from the reboot without requiring any manual software restart, sensor reassignment or configuration change.
+
+### Unexpected Power-Loss Test
+
+The current release includes protection against an interrupted write to persistent monitoring data.
+
+Perform this test only after the controlled reboot test has passed and while the controller is supervised.
+
+Do not perform the test while Raspberry Pi OS packages, configuration files or other system-level changes are being installed.
+
+With the monitor and dashboard operating normally, disconnect power from the Raspberry Pi without first issuing a shutdown command.
+
+Wait several seconds, then reconnect power and allow the Raspberry Pi to boot normally.
+
+Reconnect by SSH and confirm that both services have returned to the active state:
+
+```bash
+systemctl is-active hydro-monitor.service
+systemctl is-active hydro-dashboard.service
+```
+
+Both should report:
+
+```text
+active
+```
+
+Open the dashboard and confirm that normal monitoring resumes without manual intervention.
+
+### Check Persistent-Data Recovery
+
+Inspect the monitor log from the current boot:
+
+```bash
+journalctl -u hydro-monitor.service -b -n 100 --no-pager
+```
+
+An unexpected power interruption will not necessarily damage an application data file.
+
+If no interrupted application write occurred, the monitor should simply start normally.
+
+If the final `readings.csv` record was interrupted, the monitor should automatically:
+
+- preserve the original CSV as a timestamped `readings.powerloss-recovery-*.csv` file
+- remove only the incomplete final record
+- preserve all earlier historical readings
+- log that automatic recovery occurred
+- continue normal monitoring
+
+If `current_status.json` was left malformed by the interruption, it should be discarded automatically and regenerated from live monitor data.
+
+A damaged or unrecognised `readings.csv` header is **not** repaired automatically. The monitor will stop rather than guess at the historical data structure.
+
+The software release tests separately simulate an interrupted final CSV record and malformed live-status file. The physical power-loss test verifies that the complete Raspberry Pi installation can recover from an actual unclean shutdown.
+
+After restart, confirm that:
+
+- the dashboard returns to **Live**
+- historical logging continues
+- existing historical readings remain available
+- the sensors retain their assigned roles
+- no configuration has been lost
+- no unexpected alarm remains active
+
+The controller should now be capable of returning to normal unattended monitoring after either a controlled reboot or an unexpected loss of power.
 
 ## Final Acceptance
 
