@@ -1,0 +1,22 @@
+[Unit]
+Description=Read-only local hydroponics web dashboard
+After=network-online.target hydro-monitor.service
+Wants=network-online.target
+Requires=hydro-monitor.service
+
+[Service]
+Type=simple
+User=REPLACE_WITH_YOUR_USERNAME
+WorkingDirectory=/opt/hydro-monitor
+ExecStart=/opt/hydro-monitor/venv/bin/python /opt/hydro-monitor/hydro_dashboard.py --config /opt/hydro-monitor/config.json
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/hydro-monitor /var/lib/hydro-monitor
+
+[Install]
+WantedBy=multi-user.target

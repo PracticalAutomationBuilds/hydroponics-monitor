@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Strawberry Hydroponics Monitor</title>
+  <link rel="stylesheet" href="/dashboard.css">
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Strawberry hydroponics</p>
+      <h1>System monitor</h1>
+    </div>
+    <div id="connectionBadge" class="badge neutral">Connecting…</div>
+  </header>
+
+  <nav class="tabs" aria-label="Dashboard sections">
+    <button class="tab-button active" data-tab="monitorTab">Monitor</button>
+    <button class="tab-button" data-tab="systemTab">System information</button>
+    <button class="tab-button" data-tab="configurationTab">Configuration &amp; backups</button>
+  </nav>
+
+  <main>
+    <div id="monitorTab" class="tab-panel active">
+    <section id="statusBanner" class="status-banner neutral">
+      <div>
+        <span class="status-dot"></span>
+        <strong id="statusTitle">Waiting for monitor</strong>
+      </div>
+      <span id="updatedText">No current reading</span>
+    </section>
+
+    <section class="metrics-grid">
+      <article class="metric">
+        <span>Return water</span>
+        <strong id="returnWet">—</strong>
+      </article>
+      <article class="metric">
+        <span>Reservoir level</span>
+        <strong id="reservoirLevel">—</strong>
+      </article>
+      <article class="metric">
+        <span>Reservoir</span>
+        <strong id="waterTemp">—</strong>
+      </article>
+      <article class="metric">
+        <span>Grow-pipe airspace</span>
+        <strong id="growPipeTemp">—</strong>
+      </article>
+      <article class="metric">
+        <span>Pipe − reservoir</span>
+        <strong id="growPipeDelta">—</strong>
+      </article>
+      <article class="metric">
+        <span>Grow-pipe probe</span>
+        <strong id="growPipeProbe">—</strong>
+      </article>
+      <article class="metric">
+        <span>Ambient</span>
+        <strong id="ambientTemp">—</strong>
+      </article>
+      <article class="metric">
+        <span>Humidity</span>
+        <strong id="humidity">—</strong>
+      </article>
+      <article class="metric">
+        <span>Alarm override</span>
+        <strong id="override">—</strong>
+      </article>
+      <article class="metric">
+        <span>Active alarm</span>
+        <strong id="activeAlarm">—</strong>
+      </article>
+      <article class="metric">
+        <span>Phone notifications</span>
+        <strong id="phoneNotifications">—</strong>
+      </article>
+      <article class="metric">
+        <span>Monitor uptime</span>
+        <strong id="uptime">—</strong>
+      </article>
+      <article class="metric">
+        <span>Pi temperature</span>
+        <strong id="cpuTemp">—</strong>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Temperature history</p>
+          <h2>Reservoir, grow-pipe and ambient temperature</h2>
+        </div>
+        <div class="range-controls">
+          <button data-hours="24" class="active">24 hours</button>
+          <button data-hours="168">7 days</button>
+          <button data-hours="720">30 days</button>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i class="swatch water"></i>Reservoir</span>
+        <span><i class="swatch grow-pipe"></i>Grow-pipe airspace</span>
+        <span><i class="swatch ambient"></i>Ambient</span>
+      </div>
+      <div id="tempChart" class="chart" role="img" aria-label="Reservoir, grow-pipe and ambient temperature history"></div>
+      <p id="historyNote" class="note"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Ambient history</p>
+          <h2>Relative humidity</h2>
+        </div>
+      </div>
+      <div id="humidityChart" class="chart" role="img" aria-label="Relative humidity history"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Events and errors</p>
+          <h2>Searchable history</h2>
+        </div>
+        <div class="downloads">
+          <a href="/download/readings.csv">Download readings CSV</a>
+          <a href="/download/events.log">Download event log</a>
+        </div>
+      </div>
+      <form id="eventSearch" class="search-controls">
+        <input id="eventQuery" type="search" placeholder="Search alarms, sensor errors, override…">
+        <select id="eventLevel">
+          <option value="ALL">All levels</option>
+          <option value="ERROR">Errors</option>
+          <option value="WARNING">Warnings</option>
+          <option value="INFO">Information</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Time</th><th>Level</th><th>Event</th></tr></thead>
+          <tbody id="eventRows"><tr><td colspan="3">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+    </div>
+
+    <div id="systemTab" class="tab-panel">
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Raspberry Pi appliance</p>
+            <h2>System information</h2>
+          </div>
+          <div id="systemUpdated" class="note">Not yet loaded</div>
+        </div>
+
+        <section class="metrics-grid system-grid">
+          <article class="metric">
+            <span>Pi model</span>
+            <strong id="sysPiModel">—</strong>
+          </article>
+          <article class="metric">
+            <span>Hostname</span>
+            <strong id="sysHostname">—</strong>
+          </article>
+          <article class="metric">
+            <span>IP address</span>
+            <strong id="sysIp">—</strong>
+          </article>
+          <article class="metric">
+            <span>Wi-Fi</span>
+            <strong id="sysWifi">—</strong>
+          </article>
+          <article class="metric">
+            <span>CPU utilisation</span>
+            <strong id="sysCpuUse">—</strong>
+          </article>
+          <article class="metric">
+            <span>CPU temperature</span>
+            <strong id="sysCpuTemp">—</strong>
+          </article>
+          <article class="metric">
+            <span>Memory use</span>
+            <strong id="sysMemory">—</strong>
+          </article>
+          <article class="metric">
+            <span>SD card use</span>
+            <strong id="sysDisk">—</strong>
+          </article>
+          <article class="metric">
+            <span>System uptime</span>
+            <strong id="sysUptime">—</strong>
+          </article>
+          <article class="metric">
+            <span>Last reboot</span>
+            <strong id="sysBoot">—</strong>
+          </article>
+          <article class="metric">
+            <span>Operating system</span>
+            <strong id="sysOs">—</strong>
+          </article>
+          <article class="metric">
+            <span>Software version</span>
+            <strong id="sysVersion">—</strong>
+          </article>
+          <article class="metric">
+            <span>Hardware clock</span>
+            <strong id="sysRtcStatus">—</strong>
+          </article>
+          <article class="metric">
+            <span>RTC time</span>
+            <strong id="sysRtcTime">—</strong>
+          </article>
+        </section>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Storage and memory</p>
+            <h2>Capacity</h2>
+          </div>
+        </div>
+
+        <div class="capacity-group">
+          <div class="capacity-row">
+            <div class="capacity-label">
+              <span>SD card</span>
+              <span id="sysDiskDetail">—</span>
+            </div>
+            <div class="progress"><div id="sysDiskBar" class="progress-fill"></div></div>
+          </div>
+
+          <div class="capacity-row">
+            <div class="capacity-label">
+              <span>Memory</span>
+              <span id="sysMemoryDetail">—</span>
+            </div>
+            <div class="progress"><div id="sysMemoryBar" class="progress-fill"></div></div>
+          </div>
+
+          <div class="capacity-row">
+            <div class="capacity-label">
+              <span>Wi-Fi signal</span>
+              <span id="sysWifiDetail">—</span>
+            </div>
+            <div class="progress"><div id="sysWifiBar" class="progress-fill"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Technical details</p>
+            <h2>Runtime</h2>
+          </div>
+        </div>
+        <div class="details-grid">
+          <div><span>Architecture</span><strong id="sysArch">—</strong></div>
+          <div><span>Kernel</span><strong id="sysKernel">—</strong></div>
+          <div><span>Python</span><strong id="sysPython">—</strong></div>
+          <div><span>Load average</span><strong id="sysLoad">—</strong></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="configurationTab" class="tab-panel">
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Read-only settings</p>
+            <h2>Alarm and monitoring configuration</h2>
+          </div>
+          <div id="configurationUpdated" class="note">Not yet loaded</div>
+        </div>
+
+        <div class="config-sections">
+          <section class="config-card">
+            <h3>Alarm thresholds</h3>
+            <dl id="alarmConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>Sampling and logging</h3>
+            <dl id="loggingConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>Dashboard</h3>
+            <dl id="dashboardConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>Reservoir low-level switch</h3>
+            <dl id="lowLevelConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>Pushover phone notifications</h3>
+            <dl id="notificationConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>Real-time clock</h3>
+            <dl id="rtcConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>GPIO assignments</h3>
+            <dl id="gpioConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>Data paths</h3>
+            <dl id="pathConfig"></dl>
+          </section>
+
+          <section class="config-card">
+            <h3>Software</h3>
+            <dl id="softwareConfig"></dl>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Safe storage on your laptop</p>
+            <h2>Download backups</h2>
+          </div>
+        </div>
+
+        <p class="backup-explanation">
+          These downloads are read-only copies. Downloading them does not stop
+          monitoring, clear logs or change any system setting.
+        </p>
+
+        <div class="backup-grid">
+          <a class="backup-card primary" href="/download/backup.zip">
+            <strong>Complete backup ZIP</strong>
+            <span>Configuration, all readings and the event log in one timestamped archive.</span>
+          </a>
+
+          <a class="backup-card" href="/download/config.json">
+            <strong>Configuration</strong>
+            <span>The current config.json file, including thresholds and GPIO assignments.</span>
+          </a>
+
+          <a class="backup-card" href="/download/readings.csv">
+            <strong>Readings history</strong>
+            <span>The complete reservoir, grow-pipe, ambient and status CSV history.</span>
+          </a>
+
+          <a class="backup-card" href="/download/events.log">
+            <strong>Event and error history</strong>
+            <span>The complete monitor event and error log.</span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <footer>Read-only local dashboard. Physical alarms and controls remain independent.</footer>
+  <script src="/dashboard.js"></script>
+</body>
+</html>

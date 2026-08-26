@@ -1,0 +1,163 @@
+{
+  "gpio": {
+    "return_sensor": 24,
+    "override_switch": 18,
+    "buzzer": 12,
+    "override_led": 20,
+    "alarm_led": 26,
+    "status_led": 21,
+    "low_level_sensor": 17
+  },
+  "return_sensor": {
+    "wet_level": 0,
+    "dry_delay_seconds": 15,
+    "startup_grace_seconds": 60
+  },
+  "temperature": {
+    "reservoir_sensor_id": "",
+    "grow_pipe_enabled": true,
+    "grow_pipe_sensor_id": "",
+    "grow_pipe_alarm_enabled": false,
+    "warning_c": 24.0,
+    "critical_c": 25.0,
+    "clear_c": 23.5,
+    "read_interval_seconds": 2,
+    "sensor_failures_before_alarm": 3
+  },
+  "ambient": {
+    "enabled": true,
+    "gpio": 22,
+    "use_pulseio": false,
+    "read_interval_seconds": 10,
+    "max_stale_seconds": 300,
+    "log_fault_after_failures": 6,
+    "valid_min_temp_c": -40.0,
+    "valid_max_temp_c": 80.0
+  },
+  "logging": {
+    "csv_path": "/var/log/hydro-monitor/readings.csv",
+    "event_log_path": "/var/log/hydro-monitor/events.log",
+    "csv_interval_seconds": 60
+  },
+  "dashboard": {
+    "enabled": true,
+    "bind_address": "0.0.0.0",
+    "port": 8080,
+    "current_status_path": "/var/lib/hydro-monitor/current_status.json",
+    "max_points_per_series": 1200,
+    "status_stale_after_seconds": 15,
+    "default_history_hours": 24,
+    "system_info_refresh_seconds": 30
+  },
+  "rtc": {
+    "enabled": true,
+    "model": "DS3231",
+    "module": "Jaycar XC9044",
+    "i2c_bus": 1,
+    "i2c_address": "0x68",
+    "sda_gpio": 2,
+    "scl_gpio": 3,
+    "device_tree_overlay": "i2c-rtc,ds3231",
+    "device": "/dev/rtc0"
+  },
+  "low_level_sensor": {
+    "enabled": true,
+    "product": "Jaycar SF0920 float switch",
+    "normal_contact_closed_to_ground": true,
+    "external_pullup_ohms": 10000,
+    "alarm_delay_seconds": 30,
+    "startup_grace_seconds": 30,
+    "bounce_time_seconds": 0.2,
+    "fail_safe_open_circuit_is_low": true
+  },
+  "notifications": {
+    "enabled": false,
+    "provider": "pushover",
+    "secrets_path": "/etc/hydro-monitor/pushover.json",
+    "title_prefix": "Strawberry Hydroponics",
+    "request_timeout_seconds": 8,
+    "local_retry_attempts": 3,
+    "local_retry_delay_seconds": 5,
+    "queue_max_messages": 100,
+    "send_clear_messages": true,
+    "active_reminders_enabled": true,
+    "reminder_minutes": {
+      "LOW_WATER": 30,
+      "FLOW_LOSS": 30,
+      "TEMP_CRITICAL": 30,
+      "TEMP_SENSOR_FAULT": 60
+    },
+    "events": {
+      "LOW_WATER_ACTIVE": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "siren"
+      },
+      "LOW_WATER_CLEARED": {
+        "enabled": true,
+        "priority": -1,
+        "sound": "none"
+      },
+      "FLOW_LOSS_ACTIVE": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "siren"
+      },
+      "FLOW_RESTORED": {
+        "enabled": true,
+        "priority": -1,
+        "sound": "none"
+      },
+      "TEMP_WARNING_ACTIVE": {
+        "enabled": true,
+        "priority": 0,
+        "sound": "pushover"
+      },
+      "TEMP_CRITICAL_ACTIVE": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "spacealarm"
+      },
+      "TEMP_CRITICAL_EASED": {
+        "enabled": true,
+        "priority": -1,
+        "sound": "none"
+      },
+      "TEMP_NORMAL": {
+        "enabled": true,
+        "priority": -1,
+        "sound": "none"
+      },
+      "TEMP_SENSOR_FAULT": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "siren"
+      },
+      "TEMP_SENSOR_RESTORED": {
+        "enabled": true,
+        "priority": -1,
+        "sound": "none"
+      },
+      "LOW_WATER_REMINDER": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "siren"
+      },
+      "FLOW_LOSS_REMINDER": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "siren"
+      },
+      "TEMP_CRITICAL_REMINDER": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "spacealarm"
+      },
+      "TEMP_SENSOR_FAULT_REMINDER": {
+        "enabled": true,
+        "priority": 1,
+        "sound": "siren"
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+[Unit]
+Description=Hydroponic dual-temperature monitor with optional Pushover notifications
+After=multi-user.target
+
+[Service]
+Type=simple
+User=REPLACE_WITH_YOUR_USERNAME
+SupplementaryGroups=gpio hydro-monitor-secrets
+WorkingDirectory=/opt/hydro-monitor
+ExecStart=/opt/hydro-monitor/venv/bin/python /opt/hydro-monitor/hydro_monitor.py --config /opt/hydro-monitor/config.json
+Restart=always
+RestartPreventExitStatus=2
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/hydro-monitor /var/lib/hydro-monitor
+
+[Install]
+WantedBy=multi-user.target
