@@ -791,6 +791,48 @@ The controller should now be capable of returning to normal unattended monitorin
 
 ## Final Acceptance
 
-The system should not be considered commissioned until all applicable tests above have passed.
+The Hydroponics Monitor may be placed into normal unattended service once all applicable commissioning checks have passed.
 
-Any failed test should be corrected and repeated before the monitor is relied upon for unattended operation.
+Confirm that:
+
+- [ ] completed wiring has passed the pre-power inspection
+- [ ] hardware self-test has passed
+- [ ] both DS18B20 probes are correctly assigned and reporting
+- [ ] DHT22 readings are plausible
+- [ ] SEN0368 correctly detects return-water presence and absence
+- [ ] reservoir float correctly detects normal and low-water conditions
+- [ ] alarm-inhibit switch operates correctly
+- [ ] red, amber and green LEDs operate as designed
+- [ ] buzzer operates with the correct alarm behaviour
+- [ ] dashboard reports the correct live sensor and alarm states
+- [ ] historical logging is operating
+- [ ] monitor and dashboard services start automatically
+- [ ] controlled reboot recovery has been verified
+- [ ] unexpected power-loss recovery has been verified
+- [ ] RTC operation has been verified
+- [ ] Pushover notifications have been tested, if enabled
+- [ ] no unexpected warnings or errors remain in the service logs
+
+### Commissioning Record
+
+Record the completed commissioning details for the installed controller:
+
+| Item | Record |
+|---|---|
+| Software version | |
+| Commissioning date | |
+| Reservoir DS18B20 ID | |
+| Grow-pipe DS18B20 ID | |
+| Pushover enabled | Yes / No |
+| Commissioning completed by | |
+| Notes | |
+
+The installed software version can be checked at any time with:
+
+```bash
+cat /opt/hydro-monitor/VERSION
+```
+
+Once commissioning is complete, the controller can remain in normal unattended operation.
+
+Any later hardware modification, wiring change or software update that could affect monitoring or alarm behaviour should be followed by the relevant commissioning checks again.
