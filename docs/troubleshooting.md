@@ -226,16 +226,152 @@ active
 
 Repeat the relevant [Commissioning](commissioning.md) checks before returning the controller to unattended operation.
 
-## Dashboard Cannot Be Reached
+## Dashboard Does Not Load
 
-Check:
+If the dashboard cannot be opened at:
 
-* the Raspberry Pi is running
-* the monitoring software is running
-* the Raspberry Pi is connected to the network
-* the correct IP address or hostname is being used
-* the configured dashboard port is correct
-* another device on the same network can reach the Raspberry Pi
+`http://hydro-monitor.local:8080/`
+
+first confirm that the Raspberry Pi itself is reachable.
+
+From another computer on the same network:
+
+```powershell
+ssh hydroponics@hydro-monitor.local
+```
+
+If SSH also fails, investigate the Raspberry Pi network connection or hostname resolution before troubleshooting the dashboard service.
+
+### Check the Dashboard Service
+
+On the Raspberry Pi:
+
+```bash
+systemctl status hydro-dashboard.service
+```
+
+Press `q` to exit the status display.
+
+For a commissioned system, the service should report:
+
+```text
+active (running)
+```
+
+Check whether it is enabled:
+
+```bash
+systemctl is-enabled hydro-dashboard.service
+```
+
+The expected result is:
+
+```text
+enabled
+```
+
+If it is disabled after commissioning, enable and start it:
+
+```bash
+sudo systemctl enable --now hydro-dashboard.service
+```
+
+### Check Recent Dashboard Logs
+
+View the most recent service messages:
+
+```bash
+journalctl -u hydro-dashboard.service -n 100 --no-pager
+```
+
+For messages from the current boot only:
+
+```bash
+journalctl -u hydro-dashboard.service -b --no-pager
+```
+
+Look for errors involving:
+
+- failure to bind to port 8080
+- missing files
+- Python errors
+- file permissions
+- invalid configuration
+- inability to read monitor status or history data
+
+### Try the Raspberry Pi IP Address
+
+If the dashboard service is running but `hydro-monitor.local` does not work, determine the Raspberry Pi's IP address:
+
+```bash
+hostname -I
+```
+
+Then open:
+
+`http://<Pi-IP-address>:8080/`
+
+For example:
+
+`http://192.168.1.50:8080/`
+
+If the dashboard works by IP address but not by `hydro-monitor.local`, the dashboard itself is operating and the problem is with local hostname resolution or mDNS.
+
+### Check Whether Port 8080 Is Listening
+
+On the Raspberry Pi:
+
+```bash
+ss -ltn | grep ':8080'
+```
+
+A listening entry should be shown if the dashboard service has successfully bound to port 8080.
+
+If nothing is returned, inspect the dashboard service logs for the reason it failed to start or bind.
+
+### Dashboard Loads but Shows Stale or Unavailable Data
+
+The dashboard service and monitoring service are separate.
+
+A working web page does not necessarily mean that the monitor service is running.
+
+Check the monitor:
+
+```bash
+systemctl is-active hydro-monitor.service
+```
+
+The expected result is:
+
+```text
+active
+```
+
+If the dashboard loads but reports stale, unavailable or implausible live data, troubleshoot the monitor service using the [Monitoring Software Does Not Start](#monitoring-software-does-not-start) section.
+
+### Restart the Dashboard Service
+
+After correcting the cause:
+
+```bash
+sudo systemctl restart hydro-dashboard.service
+```
+
+Then confirm:
+
+```bash
+systemctl is-active hydro-dashboard.service
+```
+
+The expected result is:
+
+```text
+active
+```
+
+Reload the dashboard from another device and confirm that the connection returns to **Live**.
+
+Repeat the relevant [Commissioning](commissioning.md) checks before returning the controller to unattended operation.
 
 ## DS18B20 Temperature Sensor Missing
 
