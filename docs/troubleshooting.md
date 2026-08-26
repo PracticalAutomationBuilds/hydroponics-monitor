@@ -834,6 +834,132 @@ Then confirm that:
 
 Repeat the applicable alarm test from [Commissioning](commissioning.md).
 
+## Alarm-Inhibit Switch Does Not Work
+
+The maintained alarm-inhibit switch is connected to GPIO18 and uses the Raspberry Pi's internal pull-up resistor.
+
+The expected logic is:
+
+| Switch Condition | GPIO18 State | Interpretation |
+|---|---:|---|
+| Switch open | HIGH | Alarms enabled |
+| Switch closed to GND | LOW | Alarm inhibit active |
+
+The switch does not disable monitoring. It suppresses the local alarm outputs while leaving the underlying sensor condition visible to the software and dashboard.
+
+### Check the Current Input State
+
+Stop the continuous monitor before running the hardware self-test:
+
+```bash
+sudo systemctl stop hydro-monitor.service
+```
+
+Then run:
+
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
+
+With the switch in its normal **alarms enabled** position, the result should report:
+
+```text
+Override switch active: False
+```
+
+With the switch set to inhibit alarms:
+
+```text
+Override switch active: True
+```
+
+### Check TB1 Wiring
+
+The alarm-inhibit switch uses TB1 terminals 1 and 2:
+
+| TB1 Terminal | Connection |
+|---:|---|
+| 1 | GPIO18 |
+| 2 | GND |
+
+Confirm that:
+
+- the maintained SPST switch connects GPIO18 directly to GND when closed
+- no external pull-up resistor has been added
+- terminal-block screws are secure
+- GPIO18 is not permanently shorted to ground
+- the switch opens and closes electrically as expected
+
+Power the Raspberry Pi down before changing any wiring.
+
+### Check the Switch Itself
+
+With the Raspberry Pi powered down and the switch disconnected from TB1 if necessary, use a multimeter continuity test to confirm that:
+
+- one switch position is open circuit
+- the other switch position has continuity between its two terminals
+
+If both positions show the same result, the switch or its connections may be faulty.
+
+### Amber LED Does Not Follow the Switch
+
+If the self-test reports the correct inhibit state but the amber LED does not respond correctly, the fault is likely in the LED/output circuit rather than the switch input.
+
+Check:
+
+- GPIO20 connection
+- 330 Ω series resistor
+- LED polarity
+- LED ground connection
+- solder joints and terminal connections
+
+The hardware self-test can be used to confirm whether the amber LED can be operated independently.
+
+### Buzzer Still Sounds While Inhibited
+
+If the dashboard shows the alarm-inhibit switch as active but the buzzer continues operating:
+
+1. confirm the monitor service is running the expected software version
+2. confirm the dashboard and monitor agree that inhibit is active
+3. inspect the recent monitor log
+4. repeat the alarm-inhibit commissioning test
+
+Check the installed version:
+
+```bash
+cat /opt/hydro-monitor/VERSION
+```
+
+Check recent monitor messages:
+
+```bash
+journalctl -u hydro-monitor.service -n 100 --no-pager
+```
+
+Do not change GPIO logic in the configuration to compensate for an incorrectly wired switch.
+
+### After Correcting the Fault
+
+If the system has already been commissioned, restart the monitor:
+
+```bash
+sudo systemctl restart hydro-monitor.service
+```
+
+Confirm that:
+
+- alarms are enabled with the switch open
+- the amber LED is off in normal operation
+- inhibit becomes active when the switch is closed
+- the amber LED illuminates while inhibited
+- the red LED and buzzer are suppressed during a test alarm
+- the underlying alarm condition remains visible on the dashboard
+
+Return the switch to **alarms enabled** after testing and repeat the applicable section of [Commissioning](commissioning.md).
+
 ## LED Does Not Illuminate
 
 Check:
