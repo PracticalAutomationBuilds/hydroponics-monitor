@@ -591,16 +591,139 @@ Confirm that the dashboard again shows plausible ambient temperature and relativ
 
 If the controller has already been commissioned, repeat the relevant [Commissioning](commissioning.md) checks before returning it to unattended operation.
 
-## Return Water-Level Reading Incorrect
+## Return-Water Sensor Reading Incorrect
 
-Check:
+The DFRobot SEN0368 detects whether return water is present. Its signal passes through Q1 before reaching GPIO24, so the Raspberry Pi input is intentionally **active-low**.
 
-* sensor supply
-* signal connection
-* grounding
-* physical sensor installation
-* expected operating range
-* software calibration or threshold values
+The expected logic is:
+
+| Physical Condition | GPIO24 Raw Value | Interpretation |
+|---|---:|---|
+| Water present | `0` | Wet |
+| Water absent | `1` | Dry |
+
+Do not reverse the software logic merely to make an incorrectly wired sensor appear correct.
+
+### Check the Current Reading
+
+Stop the continuous monitor before running the hardware self-test:
+
+```bash
+sudo systemctl stop hydro-monitor.service
+```
+
+Then run:
+
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
+
+With water present, the result should include:
+
+```text
+Return sensor raw value: 0
+Return interpreted as wet: True
+```
+
+With no water detected:
+
+```text
+Return sensor raw value: 1
+Return interpreted as wet: False
+```
+
+### Check the SEN0368 Adaptor
+
+Power the Raspberry Pi down and disconnect power before changing any wiring.
+
+The SEN0368 adaptor should be configured with:
+
+- top selector set to **VIN**
+- IO1 jumper **UP**
+- IO2 jumper **DOWN**
+
+The blue IO1 conductor is not used by this project and should be insulated so that it cannot contact other circuitry.
+
+### Check TB3
+
+The SEN0368 adaptor connects through TB3:
+
+| TB3 Terminal | Connection |
+|---:|---|
+| 1 | 5 V |
+| 2 | GND |
+| 3 | IO2 to Q1 interface |
+
+Confirm that:
+
+- the adaptor receives 5 V
+- ground is secure
+- IO2 is connected to the Q1 interface
+- IO1 has not accidentally been connected
+- terminal-block screws are secure
+- no loose conductor or solder bridge is present
+
+### Check Q1
+
+Q1 is a BC337 NPN transistor and the project wiring assumes the documented **C-B-E** lead arrangement.
+
+The interface is:
+
+```text
+SEN0368 IO2 ── 10 kΩ ── Base Q1
+                         │
+                       100 kΩ
+                         │
+                        GND
+
+Q1 Emitter ───────────── GND
+
+Q1 Collector ─────────── GPIO24
+                         │
+                        10 kΩ
+                         │
+                        3.3 V
+```
+
+Confirm that:
+
+- the BC337 is installed in the documented C-B-E orientation
+- emitter is connected to ground
+- collector is connected to GPIO24
+- the 10 kΩ GPIO24 pull-up is connected to 3.3 V
+- the 10 kΩ base resistor is present
+- the 100 kΩ base-to-ground resistor is present
+
+The transistor interface both protects the Raspberry Pi from the adaptor's 5 V signal and inverts the logic.
+
+For the complete circuit, see [Wiring](wiring.md).
+
+### Sensor Does Not Change State
+
+If the reported state never changes:
+
+1. confirm the SEN0368 physically changes between wet and dry conditions
+2. check that the adaptor has power
+3. check IO2 and Q1 wiring
+4. inspect the sensor and cable for damage
+5. confirm GPIO24 is not shorted permanently to ground or 3.3 V
+
+Do not probe or alter the circuit while powered unless you are deliberately performing an appropriate voltage measurement.
+
+### After Correcting the Fault
+
+Repeat the hardware self-test in both wet and dry conditions.
+
+If the system has already been commissioned, restart the monitor:
+
+```bash
+sudo systemctl restart hydro-monitor.service
+```
+
+Confirm that the dashboard correctly follows the physical return-water condition and repeat the applicable alarm test from [Commissioning](commissioning.md).
 
 ## Low Reservoir Alarm Does Not Operate
 
