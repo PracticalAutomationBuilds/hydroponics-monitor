@@ -1258,15 +1258,155 @@ Then repeat the restart portion of [Commissioning](commissioning.md) to verify t
 
 ## Remote Notification Not Received
 
-Check:
+Pushover notifications are optional and depend on Internet access.
 
-* internet connectivity
-* notification configuration
-* credentials or API values
-* whether the triggering condition is configured for remote notification
-* rate limiting or repeated-alert suppression
+A Pushover failure does **not** stop local monitoring, the dashboard, LEDs, buzzer or historical logging.
 
-Credentials should never be posted publicly when requesting troubleshooting assistance.
+### Check Pushover Status
+
+Run:
+
+```bash
+sudo /opt/hydro-monitor/configure_pushover.py --status
+```
+
+Confirm that Pushover is enabled and that the required credentials are present.
+
+The User Key and Application API Token should never be displayed in full.
+
+### Send a Test Notification
+
+Run:
+
+```bash
+sudo /opt/hydro-monitor/configure_pushover.py --test-only
+```
+
+If the test message arrives, the Pushover account, credentials and Internet connection are working.
+
+If it does not arrive, continue with the checks below.
+
+### Check Internet Connectivity
+
+Confirm that the Raspberry Pi has network connectivity:
+
+```bash
+ping -c 3 1.1.1.1
+```
+
+Then confirm DNS resolution:
+
+```bash
+ping -c 3 pushover.net
+```
+
+If the first command succeeds but the second fails, investigate DNS configuration.
+
+If neither succeeds, investigate the Raspberry Pi network connection before troubleshooting Pushover itself.
+
+### Check the Monitor Log
+
+View recent monitor messages:
+
+```bash
+journalctl -u hydro-monitor.service -n 100 --no-pager
+```
+
+To show likely Pushover-related entries only:
+
+```bash
+journalctl -u hydro-monitor.service -n 200 --no-pager | grep -i pushover
+```
+
+Look for messages involving:
+
+- authentication failure
+- invalid User Key
+- invalid Application API Token
+- network or DNS failure
+- HTTP errors
+- notification suppression
+- alarm inhibit
+
+### Reconfigure Pushover
+
+If the credentials may be incorrect, rerun:
+
+```bash
+sudo /opt/hydro-monitor/configure_pushover.py
+```
+
+Enter:
+
+- the Pushover User Key
+- the dedicated Application API Token
+- an optional device name, if notifications should be limited to one device
+
+The configuration utility validates the credentials and sends a harmless setup-test notification.
+
+Do not manually place Pushover credentials in `config.json`.
+
+### Test the Pushover Account Independently
+
+If the configuration utility reports success but no notification appears:
+
+- check that notifications from Pushover are permitted on the phone
+- confirm that the intended device is active in the Pushover account
+- check whether a specific device name was configured
+- confirm that Do Not Disturb, Focus or similar phone settings are not suppressing the alert
+- inspect the Pushover application for the received message even if no audible phone alert occurred
+
+### Test a Real Alarm
+
+A successful `--test-only` message proves the communication path, but not necessarily the complete Hydroponics Monitor alarm path.
+
+With the controller supervised, create a suitable commissioning alarm such as a low-reservoir condition.
+
+Confirm that:
+
+- the dashboard reports the alarm
+- local LED and buzzer behaviour is correct
+- the corresponding Pushover notification arrives
+
+Restore the test condition afterwards.
+
+### Alarm Is Visible Locally but No Pushover Message Is Sent
+
+Check whether the alarm-inhibit switch is active.
+
+When alarm inhibit is active, the underlying sensor condition remains visible on the dashboard while alarm outputs, including Pushover notifications, are suppressed as designed.
+
+Also confirm that:
+
+- Pushover is enabled
+- the alarm confirmation period has elapsed
+- the monitor service is running
+- Internet access is available
+
+### Duplicate or Unexpected Notifications
+
+Check the monitor log to determine which alarm transition generated each notification.
+
+Do not assume that repeated messages necessarily indicate a software fault. A condition that clears and then reappears can legitimately generate new notifications.
+
+If notification behaviour does not match the documented alarm state transitions, record:
+
+- the approximate time
+- the alarm shown on the dashboard
+- the notification text
+- relevant monitor log entries
+
+Do not include Pushover credentials when sharing logs or screenshots.
+
+### After Correcting the Fault
+
+Send another harmless test notification:
+
+```bash
+sudo /opt/hydro-monitor/configure_pushover.py --test-only
+```
+
+Then repeat one supervised real-alarm notification test before returning the controller to unattended operation.
 
 ## After a Wiring Change
 
