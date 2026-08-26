@@ -73,7 +73,7 @@ The exact enclosure model, size, supplier and cable-gland requirements will be a
 
 ## Optional Items
 
-No optional hardware is currently specified for the Version 9.1.2 build.
+No optional hardware is currently specified for the current build.
 
 Pushover remote notifications are optional and do not require additional project hardware. The local dashboard, LEDs, buzzer and monitoring functions operate without Pushover.
 
