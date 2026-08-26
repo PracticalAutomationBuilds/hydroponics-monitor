@@ -498,26 +498,98 @@ sudo systemctl restart hydro-monitor.service
 
 Then confirm that the dashboard shows the reservoir and grow-pipe temperatures in their correct locations.
 
-## Incorrect Temperature Sensor Assignment
-
-If the nutrient-solution and grow-pipe temperature readings appear reversed:
-
-* identify the physical sensors
-* confirm their unique DS18B20 IDs
-* check the sensor assignments in the configuration
-* restart the monitoring software after making changes
-
 ## Ambient Temperature or Humidity Reading Missing
 
-Check:
+The DHT22 provides ambient temperature and relative-humidity data only. A missing DHT22 reading does **not** activate an alarm or prevent the Hydroponics Monitor from continuing to operate.
 
-* sensor wiring
-* supply voltage
-* GPIO assignment
-* sensor communication
-* software configuration
+The dashboard may show the ambient data as unavailable or stale while the remaining sensors continue normally.
 
-Intermittent readings should be investigated before replacing the sensor, as some ambient temperature/humidity sensors may occasionally fail to return a valid reading.
+### Run the Hardware Self-Test
+
+Stop the continuous monitor before running the self-test:
+
+```bash
+sudo systemctl stop hydro-monitor.service
+```
+
+Then run:
+
+```bash
+/opt/hydro-monitor/venv/bin/python \
+  /opt/hydro-monitor/hydro_monitor.py \
+  --config /opt/hydro-monitor/config.json \
+  --test
+```
+
+The self-test makes up to three attempts to obtain a DHT22 reading.
+
+A successful result should show plausible:
+
+- ambient temperature
+- relative humidity
+
+If all three attempts fail, continue with the checks below.
+
+### Check the Wiring
+
+Power the Raspberry Pi down and disconnect its power supply before changing any wiring.
+
+The DHT22 is connected through TB2:
+
+| TB2 Terminal | Connection |
+|---:|---|
+| 1 | 3.3 V |
+| 2 | GPIO22 / DATA |
+| 3 | GND |
+
+Confirm that:
+
+- the DHT22 is powered from **3.3 V**, not 5 V
+- DATA is connected to GPIO22
+- ground is secure
+- the terminal-block screws are secure
+- the cable conductors have not been transposed
+- no loose strand or solder bridge is present
+
+The selected DHT22 module includes the required support components, so **no additional DHT22 pull-up resistor is fitted on the protoboard**.
+
+For the complete connection details, see [Wiring](wiring.md).
+
+### Check the Monitor Log
+
+After restarting the monitor:
+
+```bash
+sudo systemctl restart hydro-monitor.service
+```
+
+check recent DHT22-related messages:
+
+```bash
+journalctl -u hydro-monitor.service -n 100 --no-pager | grep -i dht
+```
+
+Occasional DHT22 timing or checksum errors can occur and do not necessarily indicate a hardware fault. The software ignores an unsuccessful sample and tries again at the next reading interval.
+
+Investigate further if readings remain unavailable or failures continue repeatedly.
+
+### Intermittent Readings
+
+If the DHT22 works only intermittently, check:
+
+- terminal-block and cable connections
+- cable damage
+- electrical noise or poor ground continuity
+- whether moving the cable changes the behaviour
+- whether the sensor operates reliably with a shorter temporary connection
+
+Do not replace the sensor solely because of an isolated failed sample.
+
+### After Correcting the Fault
+
+Confirm that the dashboard again shows plausible ambient temperature and relative humidity values and that they continue updating normally.
+
+If the controller has already been commissioned, repeat the relevant [Commissioning](commissioning.md) checks before returning it to unattended operation.
 
 ## Return Water-Level Reading Incorrect
 
