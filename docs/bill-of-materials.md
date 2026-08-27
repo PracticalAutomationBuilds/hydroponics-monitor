@@ -8,7 +8,7 @@ This bill of materials reflects the current prototype build and may change befor
 
 ## Main Controller
 
-| Qty | Component | Part / Model | Supplier | Notes |
+| Qty | Component | Part / Model | My Supplier | Notes |
 |---:|---|---|---|---|
 | 1 | Single-board computer | Raspberry Pi 3 Model B | Core Electronics | Main controller |
 | 1 | Power supply | Official Raspberry Pi 12.5W Micro USB Power Supply | Core Electronics | 5.1 V, 2.5 A supply for the Raspberry Pi 3 Model B |
@@ -19,7 +19,7 @@ This bill of materials reflects the current prototype build and may change befor
 
 ## Sensors
 
-| Qty | Component | Part / Model | Supplier | Notes |
+| Qty | Component | Part / Model | My Supplier | Notes |
 |---:|---|---|---|---|
 | 2 | Waterproof digital temperature probe | DS18B20 | Core Electronics | Reservoir and grow-pipe probes; share the GPIO4 1-Wire bus |
 | 1 | Ambient temperature and humidity module | DHT22 | Core Electronics | 3.3 V; data on GPIO22 |
@@ -28,7 +28,7 @@ This bill of materials reflects the current prototype build and may change befor
 
 ## Indicators and Alarms
 
-| Qty | Component | Part / Model | Supplier | Notes |
+| Qty | Component | Part / Model | My Supplier | Notes |
 |---:|---|---|---|---|
 | 1 | Red 10 mm diffused LED | SparkFun COM-10632 | Core Electronics | Alarm indicator; GPIO26; requires external 330 Ω series resistor |
 | 1 | Yellow 10 mm diffused LED | SparkFun COM-10634 | Core Electronics | Used as amber alarm-inhibit indicator; GPIO20; requires external 330 Ω series resistor |
@@ -38,14 +38,14 @@ This bill of materials reflects the current prototype build and may change befor
 
 ## Interface and Protection Components
 
-| Qty | Component | Part / Model | Supplier | Notes |
+| Qty | Component | Part / Model | My Supplier | Notes |
 |---:|---|---|---|---|
 | 2 | NPN transistor | Transistor - NPN (BC337) | Core Electronics | Q1 interfaces the 5 V SEN0368 output to the Raspberry Pi; Q2 is the 5 V buzzer low-side driver. Confirm collector, base and emitter orientation before soldering. |
 | 1 pack | 1/4 W, 1% through-hole resistor assortment | CE05092 — 600 Pack of 1/4 Watt 1% Resistors | Core Electronics | Provides all resistor values required for the build: 330 Ω × 3, 1 kΩ × 1, 4.7 kΩ × 1, 10 kΩ × 4 and 100 kΩ × 1. |
 
 ## Connectors and Wiring
 
-| Qty | Component | Part / Model | Supplier | Notes |
+| Qty | Component | Part / Model | My Supplier | Notes |
 |---:|---|---|---|---|
 | 2 packs | 3-pin side-entry screw terminal block | Screw Terminal Block: 3-Pin, 0.1" Pitch, Side Entry (3-Pack) | Core Electronics | Four blocks used: DHT22, SEN0368, reservoir DS18B20 and grow-pipe DS18B20. |
 | 1 pack | 4-pin side-entry screw terminal block | Screw Terminal Block: 4-Pin, 0.1" Pitch, Side Entry (2-Pack) | Core Electronics | One block used for the maintained alarm-inhibit switch and reservoir float switch. |
