@@ -148,7 +148,7 @@ The DHT22 module used for this project already includes its required support com
 
 The DHT22 provides ambient temperature and relative-humidity data for the dashboard and historical logging. It is informational only and does not directly trigger the system alarms.
 
-### Return Water-Level Sensor
+### Return Water-Proximity (Water Pump is Working) Sensor
 
 The return-water sensor is a DFRobot SEN0368 non-contact liquid-level sensor operating through its supplied 5 V adaptor.
 
