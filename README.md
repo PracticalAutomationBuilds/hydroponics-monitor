@@ -37,7 +37,7 @@ The system monitors:
 - reservoir nutrient-solution temperature
 - grow-pipe airspace temperature
 - ambient temperature and relative humidity
-- return-water presence
+- return-water presence (Pump Working indication)
 - critically low reservoir water level
 
 ## Outputs and Alerts
