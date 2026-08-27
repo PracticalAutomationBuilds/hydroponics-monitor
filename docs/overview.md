@@ -13,7 +13,7 @@ The system is designed to monitor:
 - reservoir nutrient-solution temperature
 - grow-pipe airspace temperature
 - ambient temperature and relative humidity
-- return-water presence
+- return-water presence (used to confirm the Water Pump is operating)
 - critically low reservoir water level
 
 ## Alerts and Outputs
