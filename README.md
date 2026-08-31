@@ -40,7 +40,7 @@ The system monitors:
 - return-water presence (Pump Working indication)
 - critically low reservoir water level
 
-### Why pH, EC and DO are not automated
+### Why pH, EC and DO are not monitored, controlled  or automated
 
 This system deliberately does not continuously monitor pH, electrical conductivity (EC) or dissolved oxygen (DO), and it does not perform automated nutrient or pH dosing. Reliable continuous measurement of these parameters requires comparatively expensive probes and additional maintenance, including regular calibration, cleaning and, for some sensors, correct storage. Permanently immersed probes can also drift, foul or fail in ways that may produce plausible but incorrect readings. Automated dosing adds another level of risk: a failed sensor, stuck pump, software error or incorrect calibration can rapidly alter an entire nutrient reservoir before the problem is noticed. For a small domestic hydroponic system, we consider periodic manual testing with suitable handheld meters, followed by deliberate manual adjustment, to be the simpler, safer and more cost-effective approach. The monitor therefore concentrates on parameters that can be measured reliably and continuously with inexpensive sensors, while leaving nutrient chemistry under human supervision.
 
